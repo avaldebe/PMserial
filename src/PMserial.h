@@ -35,8 +35,8 @@ enum PMS {
 
 class SerialPM{
 public:
-  uint16_t pm_tsi[3]={0xFFFF}, pm_atm[3]={0xFFFF}, psd[6]={0xFFFF};
-  boolean has_psd=false;
+  uint16_t pm_tsi[3], pm_atm[3], psd[6];
+  boolean has_psd;
   SerialPM(PMS sensor) : pms(sensor) {
     switch (pms) {
     case PLANTOWER_24B:
