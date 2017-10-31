@@ -10,7 +10,7 @@
 #define _SERIALPM_H
 
 #include <Arduino.h>
-// some ICs have only SWserial, eg tiny85
+
 #define HAS_HW_SERIAL
 
 #if defined(__AVR__) || defined(ESP8266)
@@ -30,10 +30,23 @@ enum PMS {
   PMS7003, G7=PMS7003,
   PMSA003, G10=PMSA003
 };
+const uint8_t bufferLenMin=24, bufferLenMax=32;
 
 class SerialPM{
 public:
-  SerialPM(PMS sensor) : pms(sensor) {}
+  uint16_t pm_tsi[3]={0xFFFF}, pm_atm[3]={0xFFFF}, psd[6]={0xFFFF};
+  boolean has_psd=false;
+  SerialPM(PMS sensor) : pms(sensor) {
+    switch (pms) {
+    case PMS3003:
+      bufferLen=bufferLenMin;
+      has_psd=false;
+      break;
+    default:
+      bufferLen=bufferLenMax;
+      has_psd=true;
+    }
+  }
 #ifdef HAS_HW_SERIAL
   void begin(HardwareSerial &serial);
 #endif
@@ -46,6 +59,9 @@ public:
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;
+  uint8_t bufferLen, buffer[bufferLenMax];
+  void trigRead(const uint8_t *message, uint8_t lenght);
+  boolean checkBuffer();
 };
 
 #endif //_SERIALPM_H
