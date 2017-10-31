@@ -9,14 +9,22 @@
 #include <Arduino.h>
 
 #include <PMserial.h>
-SerialPM pms(PMS1003);
+SerialPM pms(PMS3003);
+
+#ifdef HAS_SW_SERIAL
+SoftwareSerial SWSerial(0,1);
+#endif
 
 void setup()
 {
-// leonardo & maple_mini: Serial1 is HWserial
-#ifdef HAS_USB_SERIAL
+#ifdef HAS_USB_SERIAL         // leonardo & maple_mini: Serial1 is HWserial
+  Serial.println("PMS sensor on HardwareSerial1");
   pms.begin(Serial1);
+#elif defined(HAS_SW_SERIAL)  // test SWserial
+  Serial.println("PMS sensor on SoftwareSerial");
+  pms.begin(SWSerial);
 #else
+  Serial.println("PMS sensor on HardwareSerial");
   pms.begin(Serial);
 #endif
   pms.init();

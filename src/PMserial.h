@@ -10,14 +10,15 @@
 #define _SERIALPM_H
 
 #include <Arduino.h>
-// for ICs like the ATtiny85 wich has only SWserial
+// some ICs have only SWserial, eg tiny85
 #define HAS_HW_SERIAL
 
-#ifdef HAS_SW_SERIAL
+#if defined(__AVR__) || defined(ESP8266)
+#define HAS_SW_SERIAL
 #include <SoftwareSerial.h>
 #endif
 
-// leonardo and maple_mini boards Serial is USBserial and Serial1 is HWserial
+// leonardo & maple_mini: Serial1 is HWserial
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB)
 #define HAS_USB_SERIAL
 #endif
