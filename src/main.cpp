@@ -9,17 +9,22 @@
 #include <Arduino.h>
 
 #include <PMserial.h>
-SerialPM pms(Serial,PMS1003);
+SerialPM pms(PMS1003);
 
 void setup()
-{  
-  Serial.begin(9600,SERIAL_8N1);
+{
+// leonardo & maple_mini: Serial1 is HWserial
+#ifdef HAS_USB_SERIAL
+  pms.begin(Serial1);
+#else
+  pms.begin(Serial);
+#endif
   pms.init();
 }
 
 void loop()
 {
-  // read the PM sensor 
+  // read the PM sensor
   pms.read();
 
   // wait for 10 seconds

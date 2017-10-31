@@ -10,6 +10,17 @@
 #define _SERIALPM_H
 
 #include <Arduino.h>
+// for ICs like the ATtiny85 wich has only SWserial
+#define HAS_HW_SERIAL
+
+#ifdef HAS_SW_SERIAL
+#include <SoftwareSerial.h>
+#endif
+
+// leonardo and maple_mini boards Serial is USBserial and Serial1 is HWserial
+#if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB)
+#define HAS_USB_SERIAL
+#endif
 
 enum PMS {
   PMS1003, G1=PMS1003,
@@ -21,11 +32,13 @@ enum PMS {
 
 class SerialPM{
 public:
-  SerialPM(Stream *serial, PMS sensor) :
-    uart(serial), pms(sensor) {}
-  SerialPM(Stream &serial, PMS sensor) :
-    uart(&serial), pms(sensor)  {}
-
+  SerialPM(PMS sensor) : pms(sensor) {}
+#ifdef HAS_HW_SERIAL
+  void begin(HardwareSerial &serial);
+#endif
+#ifdef HAS_SW_SERIAL
+  void begin(SoftwareSerial &serial);
+#endif
   void init();
   void read();
 
