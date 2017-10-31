@@ -5,8 +5,13 @@
   PMS5003 aka G5
   PMS7003 aka G7
   PMSA003 aka G10
+*/
 
-Sensor data format: https://github.com/avaldebe/AQmon/blob/master/lua_modules/pms3003.lua
+#include <PMserial.h>
+
+/* Sensor data format:
+  https://github.com/avaldebe/AQmon/blob/master/lua_modules/pms3003.lua
+
 PMS2003, PMS3003:
   24 byte long messages via UART 9600 8N1 (3.3V TTL).
 DATA(MSB,LSB): Message header (4 bytes), 2 pairs of bytes (MSB,LSB)
@@ -43,10 +48,9 @@ DATA(MSB,LSB): Message body (28 bytes), 14 pairs of bytes (MSB,LSB)
   12( 27, 28): num. particles with diameter > 10. um in 100 cm3 of air
   13( 29, 30): Reserved
   14( 31, 32): cksum=byte01+..+byte30
-
 */
-#include <PMserial.h>
 
+#define buff2word(n) (buffer[n]<<8)|buffer[n+1]
 const uint8_t
   TSI_START =  4,             // PM [ug/m3] (TSI standard)
   ATM_START = 10,             // PM [ug/m3] (std. atmosphere)
@@ -86,7 +90,7 @@ void SerialPM::trigRead(const uint8_t *message, uint8_t lenght){
 }
 
 boolean SerialPM::checkBuffer(){
-  uint16_t cksum=(buffer[bufferLen-2]<<8)|buffer[bufferLen-1];
+  uint16_t cksum=buff2word(bufferLen-2);
   for (uint8_t n=0; n<bufferLen-2; n++){
     cksum-=buffer[n];
   }
@@ -103,13 +107,13 @@ void SerialPM::read(){
   if (!checkBuffer()) return; // only update values if buffer checks out
   uint8_t bin, n;
   for (bin=0, n=TSI_START; bin<3; bin++, n+=2){
-    pm_tsi[bin] = (buffer[n]<<8)|buffer[n+1];
+    pm_tsi[bin] = buff2word(n);
   }
   for (bin=0, n=ATM_START; bin<3; bin++, n+=2){
-    pm_atm[bin] = (buffer[n]<<8)|buffer[n+1];
+    pm_atm[bin] = buff2word(n);
   }
   if (!has_psd) return;
   for (bin=0, n=PSD_START; bin<6; bin++, n+=2){
-    psd[bin] = (buffer[n]<<8)|buffer[n+1];
+    psd[bin] = buff2word(n);
   }
 }

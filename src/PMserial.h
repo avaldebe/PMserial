@@ -24,13 +24,14 @@
 #endif
 
 enum PMS {
-  PMS1003, G1=PMS1003,
-  PMS3003, G3=PMS3003,
-  PMS5003, G5=PMS5003,
-  PMS7003, G7=PMS7003,
-  PMSA003, G10=PMSA003
+  PLANTOWER_24B, // 24bit long message, no count info (psd)
+  PLANTOWER_32B, // 32bit long message, w/count info (psd)
+  PMS1003=PLANTOWER_32B, G1=PMS1003,
+  PMS3003=PLANTOWER_24B, G3=PMS3003,
+  PMS5003=PLANTOWER_32B, G5=PMS5003,
+  PMS7003=PLANTOWER_32B, G7=PMS7003,
+  PMSA003=PLANTOWER_32B, G10=PMSA003
 };
-const uint8_t bufferLenMin=24, bufferLenMax=32;
 
 class SerialPM{
 public:
@@ -38,12 +39,11 @@ public:
   boolean has_psd=false;
   SerialPM(PMS sensor) : pms(sensor) {
     switch (pms) {
-    case PMS3003:
-      bufferLen=bufferLenMin;
+    case PLANTOWER_24B:
+      bufferLen=24;
       has_psd=false;
-      break;
     default:
-      bufferLen=bufferLenMax;
+      bufferLen=32;
       has_psd=true;
     }
   }
@@ -59,7 +59,9 @@ public:
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;
-  uint8_t bufferLen, buffer[bufferLenMax];
+  uint8_t bufferLen, buffer[32];
+
+  // utility functions
   void trigRead(const uint8_t *message, uint8_t lenght);
   boolean checkBuffer();
 };
