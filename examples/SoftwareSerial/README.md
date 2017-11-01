@@ -1,6 +1,6 @@
 # PMSerail: HardwareSerial1.ino
 
-Read PMS5003 sensor on SWSerial(10,11)
+Read PMS5003 sensor on SWSerial
 
 ## Arduino `uno`
 
@@ -58,10 +58,28 @@ platformio run -e mini328_3V3 -t upload
 platformio run -e mini328_3V3 -t monitor
 ```
 
-## Arduino `d1_mini`
+## ESP8266 `esp01`
 
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.
-- SWSerial on pins D1/5 (RX) and D2/4 (TX).
+
+- SWSerial on pins GPIO2 (RX) and GPIO0 (TX).
+
+```bash
+# compile
+platformio run -e esp01
+
+# upload
+platformio run -e esp01 -t upload
+
+# open serial monitor
+platformio run -e esp01 -t monitor
+```
+
+## ESP8266 `d1_mini`
+
+**Note** This is a 3.3V board, and the PMS5003 requires 5V.
+
+- SWSerial on pins GPIO2/D4 (RX) and GPIO0/D3 (TX).
 
 ```bash
 # compile

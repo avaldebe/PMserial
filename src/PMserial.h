@@ -18,6 +18,10 @@
 #include <SoftwareSerial.h>
 #endif
 
+#if defined(HAS_HWSERIAL1) || defined(BOARD_HAVE_USART1)
+#define HAS_HW_SERIAL1
+#endif
+
 // leonardo & maple_mini: Serial1 is HWserial
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB)
 #define HAS_USB_SERIAL

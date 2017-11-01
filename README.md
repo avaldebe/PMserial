@@ -28,7 +28,7 @@ Atmega2560 @ 16MHz | X |   |   | [examples/HardwareSerial1][]
 STM32f103c8        |   |   | X |
 STM32f103cb        |   |   | X | [examples/HardwareSerial1][]
 ESP8266            | X |   |   | [examples/SoftwareSerial][]
-ESP832             |   |   | X |
+ESP832             |   |   | X | [examples/HardwareSerial1][]
 
 [examples/SoftwareSerial]: examples/SoftwareSerial/README.md
 [examples/HardwareSerial1]: examples/HardwareSerial1/README.md
