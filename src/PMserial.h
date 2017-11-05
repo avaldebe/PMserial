@@ -12,6 +12,9 @@
 #include <Arduino.h>
 
 #define HAS_HW_SERIAL
+#ifdef HAS_HW_SERIAL
+#include <HardwareSerial.h>
+#endif
 
 #if defined(__AVR__) || defined(ESP8266)
 #define HAS_SW_SERIAL
