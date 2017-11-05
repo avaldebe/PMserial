@@ -39,16 +39,18 @@ enum PMS {
 
 class SerialPM{
 public:
-  uint16_t pm_tsi[3], pm_atm[3], num_lbc[6];
-  boolean has_count;
+  uint16_t
+    pm[3],  // particulate matter [ug/m3]
+    nc[6];  // number concentration [#/100cc]
+  boolean has_num;
   SerialPM(PMS sensor) : pms(sensor) {
     switch (pms) {
     case PLANTOWER_24B:
       bufferLen=24;
-      has_count=false;
+      has_num=false;
     default:
       bufferLen=32;
-      has_count=true;
+      has_num=true;
     }
   }
 #ifdef HAS_HW_SERIAL
@@ -58,7 +60,7 @@ public:
   void begin(SoftwareSerial &serial);
 #endif
   void init();
-  void read();
+  void read(boolean tsi_mode=false, boolean truncated_num=false);
 
 protected:
   Stream *uart; // hardware/software serial

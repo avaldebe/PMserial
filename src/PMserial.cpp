@@ -102,18 +102,19 @@ void SerialPM::init(){
   trigRead(cfg,msgLen);  // set passive mode
 }
 
-void SerialPM::read(){
+void SerialPM::read(boolean tsi_mode, boolean truncated_num){
   trigRead(trg,msgLen);  // read comand on passive mode
   if (!checkBuffer()) return; // only update values if buffer checks out
   uint8_t bin, n;
-  for (bin=0, n=TSI_START; bin<3; bin++, n+=2){
-    pm_tsi[bin] = buff2word(n);
+  for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2){
+    pm[bin] = buff2word(n);
   }
-  for (bin=0, n=ATM_START; bin<3; bin++, n+=2){
-    pm_atm[bin] = buff2word(n);
-  }
-  if (!has_count) return;
+  if (!has_num) return;
   for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
-    num_lbc[bin] = buff2word(n);
+    nc[bin] = buff2word(n); // number particles w/diameter > r_bin
+  }
+  if (!truncated_num) return;
+  for (bin=5; bin>0; bin--){
+    nc[bin] -= nc[bin-1];   //
   }
 }

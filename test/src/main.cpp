@@ -41,9 +41,9 @@ void setup() {
 void loop() {
   // read the PM sensor
   pms.read();
-  Serial.print(F("PM1 "))  ;Serial.print(pms.pm_atm[0]);Serial.print(F(", "));
-  Serial.print(F("PM2.5 "));Serial.print(pms.pm_atm[1]);Serial.print(F(", "));
-  Serial.print(F("PM10 ")) ;Serial.print(pms.pm_atm[2]);Serial.println(F(" [ug/m3]"));
+  Serial.print(F("PM1 "))  ;Serial.print(pms.pm[0]);Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));Serial.print(pms.pm[1]);Serial.print(F(", "));
+  Serial.print(F("PM10 ")) ;Serial.print(pms.pm[2]);Serial.println(F(" [ug/m3]"));
 
   // wait for 10 seconds
   delay(10000);
