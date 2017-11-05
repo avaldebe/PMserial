@@ -54,7 +54,7 @@ DATA(MSB,LSB): Message body (28 bytes), 14 pairs of bytes (MSB,LSB)
 const uint8_t
   TSI_START =  4,             // PM [ug/m3] (TSI standard)
   ATM_START = 10,             // PM [ug/m3] (std. atmosphere)
-  PSD_START = 16;             // num. particles in 100 cm3 of air
+  NUM_START = 16;             // num. particles in 100 cm3 of air
 
 const uint8_t
   msgLen = 7,
@@ -112,8 +112,8 @@ void SerialPM::read(){
   for (bin=0, n=ATM_START; bin<3; bin++, n+=2){
     pm_atm[bin] = buff2word(n);
   }
-  if (!has_psd) return;
-  for (bin=0, n=PSD_START; bin<6; bin++, n+=2){
-    psd[bin] = buff2word(n);
+  if (!has_count) return;
+  for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
+    num_lbc[bin] = buff2word(n);
   }
 }

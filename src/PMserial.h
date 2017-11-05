@@ -28,8 +28,8 @@
 #endif
 
 enum PMS {
-  PLANTOWER_24B, // 24bit long message, no count info (psd)
-  PLANTOWER_32B, // 32bit long message, w/count info (psd)
+  PLANTOWER_24B, // 24bit long message, no count info (LBC)
+  PLANTOWER_32B, // 32bit long message, w/count info (LBC)
   PMS1003=PLANTOWER_32B, G1=PMS1003,
   PMS3003=PLANTOWER_24B, G3=PMS3003,
   PMS5003=PLANTOWER_32B, G5=PMS5003,
@@ -39,16 +39,16 @@ enum PMS {
 
 class SerialPM{
 public:
-  uint16_t pm_tsi[3], pm_atm[3], psd[6];
-  boolean has_psd;
+  uint16_t pm_tsi[3], pm_atm[3], num_lbc[6];
+  boolean has_count;
   SerialPM(PMS sensor) : pms(sensor) {
     switch (pms) {
     case PLANTOWER_24B:
       bufferLen=24;
-      has_psd=false;
+      has_count=false;
     default:
       bufferLen=32;
-      has_psd=true;
+      has_count=true;
     }
   }
 #ifdef HAS_HW_SERIAL
