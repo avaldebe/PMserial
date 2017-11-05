@@ -22,17 +22,17 @@ SoftwareSerial SWSerial(10,11);
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Booted");
+  Serial.println(F("Booted"));
 
 // leonardo & maple_mini: Serial1 is HWserial
 #if   defined(HAS_HW_SERIAL1)
-  Serial.println("PMS sensor on HardwareSerial1");
+  Serial.println(F("PMS sensor on HardwareSerial1"));
   pms.begin(Serial1);
 #elif defined(HAS_SW_SERIAL)  // test SWserial
-  Serial.println("PMS sensor on SoftwareSerial");
+  Serial.println(F("PMS sensor on SoftwareSerial"));
   pms.begin(SWSerial);
 #else
-  Serial.println("PMS sensor on HardwareSerial");
+  Serial.println(F("PMS sensor on HardwareSerial"));
   pms.begin(Serial);
 #endif
   pms.init();
@@ -41,9 +41,9 @@ void setup() {
 void loop() {
   // read the PM sensor
   pms.read();
-  Serial.print("PM1 ")  ;Serial.print(pms.pm_atm[0]);Serial.print(", ");
-  Serial.print("PM2.5 ");Serial.print(pms.pm_atm[1]);Serial.print(", ");
-  Serial.print("PM10 ") ;Serial.print(pms.pm_atm[2]);Serial.println(" [ug/m3]");
+  Serial.print(F("PM1 "))  ;Serial.print(pms.pm_atm[0]);Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));Serial.print(pms.pm_atm[1]);Serial.print(F(", "));
+  Serial.print(F("PM10 ")) ;Serial.print(pms.pm_atm[2]);Serial.println(F(" [ug/m3]"));
 
   // wait for 10 seconds
   delay(10000);
