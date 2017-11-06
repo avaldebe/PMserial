@@ -37,17 +37,6 @@ void setup() {
 #endif
 }
 
-void barVert(uint16_t *val, uint8_t nval, uint16_t scale=10, uint8_t pos=0) {
-  const uint8_t bw=8, x0=X0-bw;
-  uint32_t bh;
-  display.clear();         // debug positions
-  for (uint8_t bin=0; bin<nval; bin++){
-    bh=(HEIGHT*val[bin])/(scale>0?scale:1);
-    display.drawRect(x0-pos*bw, 0, bw-2, (uint16_t) bh);
-  }
-  display.display();
-}
-
 void barPM(uint16_t *pm){
   const uint8_t barWidth=8, nbar=WIDTH/barWidth, nbin=3, x0=X0-barWidth;
   static uint8_t buffer[nbar*nbin], pos=0, scale=0;
@@ -71,10 +60,9 @@ void barPM(uint16_t *pm){
   // buffer new value
   pos%=nbar; // ensure we are inside the buffer
   for (bin=0, n=pos*nbin; bin<nbin; bin++, n++){
-     buffer[n] = pm[bin] >> scale;
+     buffer[n] = pm[bin]>>scale;
   }
   pos++;     // next possition on the buffer, first to plot
-
 
   // plot buffer
   display.clear();
@@ -92,6 +80,30 @@ void barPM(uint16_t *pm){
 
 }
 
+void barNC(uint16_t *nc){
+  const uint8_t nbin=6, barWidth=WIDTH/nbin, x0=X0-barWidth;
+  uint8_t bin, scale;
+
+  // rescale input, if necesary
+  scale=0;
+  for (bin=0; bin<nbin; bin++){
+    while ((nc[bin]>>scale)>HEIGHT) {
+      scale++;
+    }
+  }
+
+  // plot input
+  display.clear();
+  for (bin=0; bin<nbin; bin++){
+    display.fillRect(x0-barWidth*bin, 0, barWidth-2, nc[bin]>>scale);
+#ifdef DEBUG
+    display.display();
+    delay(150);
+#endif
+  }
+  display.display();
+}
+
 void barGraph(uint16_t *val, uint8_t nval) {
   const uint8_t i0=DISPLAY_WIDTH-WIDTH/2;
   display.clear();
@@ -103,8 +115,9 @@ void barGraph(uint16_t *val, uint8_t nval) {
 
 void loop() {
 #ifdef DEBUG
-  static uint16_t pm[3]={0,1,2};
+ static uint16_t pm[3]={0,1,2}, nc[6]={0,0x0FFF,0x0F00,0x00FF,0x00F0,0};
   barPM(pm);
+  barNC(nc);
   pm[0]++;
   pm[1]+=2;
   pm[2]+=4;
