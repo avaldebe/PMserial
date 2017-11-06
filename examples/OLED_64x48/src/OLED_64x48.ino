@@ -17,13 +17,17 @@ HardwareSerial mySerial(2);   // UART2 on GPIO16(RX),GPIO17(TX)
 #include "SSD1306.h"
 SSD1306 display(0x3c, SDA, SCL);
 // this is a 64x48 display, not 128x64
-const uint8_t WIDTH=64, HEIGHT=48, X1=WIDTH/2, X0=DISPLAY_WIDTH-X1;
+const uint8_t 
+  WIDTH=64, HEIGHT=48,
+  X0=WIDTH/2, X1=DISPLAY_WIDTH-X0, XM=(X0+X1)/2,
+  Y1=DISPLAY_HEIGHT, Y0=Y1-HEIGHT, YM=(Y0+Y1)/2;
 
 //#define DEBUG
 
 void setup() {
   Serial.begin(9600);
-  Serial.printf("Booted\n");
+  Serial.printf("\nProgram: %s\n", __FILE__);
+  Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
   pms.begin(mySerial);
   Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",PMS_RX,PMS_TX);
@@ -35,10 +39,11 @@ void setup() {
 #ifdef DEBUG
   display.invertDisplay(); // debug positions
 #endif
+  display.flipScreenVertically();
 }
 
-void barPM(uint16_t *pm){
-  const uint8_t barWidth=8, nbar=WIDTH/barWidth, nbin=3, x0=X0-barWidth;
+void plotPM(uint16_t *pm, const uint16_t msec){
+  const uint8_t barWidth=8, nbar=WIDTH/barWidth, nbin=3;
   static uint8_t buffer[nbar*nbin], pos=0, scale=0;
   uint8_t n, bin, bar;
 
@@ -68,7 +73,7 @@ void barPM(uint16_t *pm){
   display.clear();
   for (n=0; n<nbar*nbin; n++){
     bar=(nbar-pos+n/nbin)%nbar;
-    display.drawRect(x0-barWidth*bar, 0, barWidth-2, buffer[n]);
+    display.drawRect(X0+barWidth*bar, Y1-buffer[n], barWidth-2, buffer[n]);
 #ifdef DEBUG
     if(bar == nbar-1)
       Serial.printf("\n  pos:%d, bar:%d, val:%d",pos,bar,buffer[n]);
@@ -77,12 +82,11 @@ void barPM(uint16_t *pm){
 #endif
   }
   display.display();
-
+  delay(msec);
 }
-
-void barNC(uint16_t *nc){
+void plotNC(uint16_t *nc, const uint16_t msec){
   const uint8_t nbin=6, barWidth=WIDTH/nbin, x0=X0-barWidth;
-  uint8_t bin, scale;
+  uint8_t bin, scale, barHeight;
 
   // rescale input, if necesary
   scale=0;
@@ -95,13 +99,63 @@ void barNC(uint16_t *nc){
   // plot input
   display.clear();
   for (bin=0; bin<nbin; bin++){
-    display.fillRect(x0-barWidth*bin, 0, barWidth-2, nc[bin]>>scale);
+    barHeight=nc[bin]>>scale;
+    display.fillRect(X0+barWidth*bin, Y1-barHeight, barWidth-2, barHeight);
 #ifdef DEBUG
     display.display();
     delay(150);
 #endif
   }
   display.display();
+  delay(msec);
+}
+
+static char *uint2str (const char *fmt, uint16_t var){
+  // wrap sprintf as a function with a pre-deffined buffer
+  const uint8_t chlen = 32;
+  static char buffer[chlen];
+  sprintf(buffer, fmt, var);
+  return buffer;
+}
+
+void showPM(uint16_t *pm, const uint16_t msec){
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.drawString(XM, 14, "[ug/m3]");
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(X0, 24, "PM1.0");
+  display.drawString(X0, 34, "PM2.5");
+  display.drawString(X0, 44, "PM10");
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(X1, 24, uint2str("%7d",pm[0]));//PM1.0
+  display.drawString(X1, 34, uint2str("%7d",pm[1]));//PM2.5
+  display.drawString(X1, 44, uint2str("%7d",pm[2]));//PM10
+  display.display();
+  delay(msec);
+}
+
+void showNC(uint16_t *nc, const uint16_t msec){
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.drawString(XM, 14, "[#/100cc]");
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(X0, 24, "N0.3");
+//display.drawString(X0, 34, "N0.5");
+  display.drawString(X0, 34, "N1.0");
+  display.drawString(X0, 44, "N2.5");
+//display.drawString(X0, 54, "N5.0");
+  display.drawString(X0, 54, "N10");
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(X1, 24, uint2str("%7d",nc[0]));//N0.3
+//display.drawString(X1, 34, uint2str("%7d",nc[1]));//N0.5
+  display.drawString(X1, 34, uint2str("%7d",nc[2]));//N1.0
+  display.drawString(X1, 44, uint2str("%7d",nc[3]));//N2.5
+//display.drawString(X1, 54, uint2str("%7d",nc[4]));//N5.0
+  display.drawString(X1, 54, uint2str("%7d",nc[5]));//N10
+  display.display();
+  delay(msec);
 }
 
 void loop() {
@@ -109,14 +163,14 @@ void loop() {
   pms.read();
 
   // print values
-  Serial.printf("PM1 %d, PM2.5 %d, PM10 %d [ug/m3], ",
+  Serial.printf("PM1 %2d, PM2.5 %2d, PM10 %2d [ug/m3]; ",
     pms.pm[0],pms.pm[1],pms.pm[2]);
-  Serial.printf("N0.3 %d, N0.5 %d, N1 %d, N2.5 %d, N5 %d, N10 %d [#/100cc]\n",
+  Serial.printf("N0.3 %4d, N0.5 %3d, N1 %2d, N2.5 %2d, N5 %2d, N10 %2d [#/100cc]\n",
     pms.nc[0],pms.nc[1],pms.nc[2],pms.nc[3],pms.nc[4],pms.nc[5]);
 
   // display values
-  barPM(pms.pm); // particulate matter
-  delay(5000);   // 5 sec
-  barNC(pms.nc); // number concentrarion
-  delay(5000);   // 5 sec
+  showPM(pms.pm, 5000); // particulate matter, wait 5 sec
+  plotPM(pms.pm, 5000);
+  showNC(pms.nc, 5000); // number concentrarion, wait 5 sec
+  plotNC(pms.nc, 5000);
 }
