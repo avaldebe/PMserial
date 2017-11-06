@@ -25,20 +25,21 @@ PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] |
 
 ## Compatibility
 
-MCU                | Tested Works | Doesn't Work | Not Tested  | Example | Notes
------------------- | :----------: | :----------: | :---------: | ------- | -----
-Atmega328  @  8MHz | X |   |   | [SoftwareSerial][]   |
-Atmega328  @ 16MHz |   |   | X | [SoftwareSerial][]   |
-ATmega168  @  8MHz |   |   | X | [SoftwareSerial][]   |
-Atmega168  @ 16MHz |   |   | X |                      |
-Atmega32u4 @  8MHz |   |   | X |                      |
-Atmega32u4 @ 16MHz |   |   | X | [HardwareSerial1][]  |
-Atmega2560 @ 16MHz | X |   |   | [HardwareSerial1][]  |
-STM32f103c8        |   |   | X |                      |
-STM32f103cb        |   |   | X | [HardwareSerial1][]  |
-ESP8266            | X |   |   | [SoftwareSerial][]   |
-ESP832             |   |   | X | [HardwareSerial1][]  | Do not support Serial1
+MCU                | Tested Works | Doesn't Work | Not Tested  | Examples | Notes
+------------------ | :----------: | :----------: | :---------: | -------- | -----
+Atmega328  @  8MHz | X |   |   | [SoftwareSerial][]                 |
+Atmega328  @ 16MHz |   |   | X | [SoftwareSerial][]                 |
+ATmega168  @  8MHz |   |   | X | [SoftwareSerial][]                 |
+Atmega168  @ 16MHz |   |   | X |                                    |
+Atmega32u4 @  8MHz |   |   | X |                                    |
+Atmega32u4 @ 16MHz |   |   | X | [HardwareSerial1][]                |
+Atmega2560 @ 16MHz | X |   |   | [HardwareSerial1][]                |
+STM32f103c8        |   |   | X |                                    |
+STM32f103cb        |   |   | X | [HardwareSerial1][]                |
+ESP8266            | X |   |   | [SoftwareSerial][]  [OLED 64x48][] |
+ESP32              |   |   | X | [HardwareSerial1][] [OLED 64x48][] | Serial1 not supported
 
 
-[SoftwareSerial]: examples/SoftwareSerial/README.md
+[SoftwareSerial]:  examples/SoftwareSerial/README.md
 [HardwareSerial1]: examples/HardwareSerial1/README.md
+[OLED 64x48]:      examples/OLED_64x48/README.md
