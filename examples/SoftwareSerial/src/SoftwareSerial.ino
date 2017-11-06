@@ -2,10 +2,11 @@
 
 #include <SoftwareSerial.h>
 #ifdef ESP8266
-SoftwareSerial SWSerial(2,0); // RX, TX
+const uint8_t PMS_RX=2, PMS_TX=0;
 #else
-SoftwareSerial SWSerial(10,11); // RX, TX
+const uint8_t PMS_RX=10, PMS_TX=11;
 #endif
+SoftwareSerial SWSerial(PMS_RX,PMS_TX);
 
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
 SerialPM pms(PMS5003); // aka G5
@@ -15,6 +16,9 @@ void setup() {
   Serial.println(F("Booted"));
 
   Serial.println(F("PMS sensor on SWSerial"));
+  Serial.print(F("  RX:"));Serial.println(PMS_RX);
+  Serial.print(F("  TX:"));Serial.println(PMS_TX);
+
   pms.begin(SWSerial);
   pms.init();
 }
