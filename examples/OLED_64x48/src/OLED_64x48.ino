@@ -19,7 +19,7 @@ SSD1306 display(0x3c, SDA, SCL);
 // this is a 64x48 display, not 128x64
 const uint8_t WIDTH=64, HEIGHT=48, X1=WIDTH/2, X0=DISPLAY_WIDTH-X1;
 
-#define DEBUG
+//#define DEBUG
 
 void setup() {
   Serial.begin(9600);
@@ -104,43 +104,19 @@ void barNC(uint16_t *nc){
   display.display();
 }
 
-void barGraph(uint16_t *val, uint8_t nval) {
-  const uint8_t i0=DISPLAY_WIDTH-WIDTH/2;
-  display.clear();
-  for (int8_t i=1; i<=nval; i++) {
-    display.fillRect(i0-i*8, 0, 6, i*HEIGHT/8);
-  }
-  display.display();
-}
-
 void loop() {
-#ifdef DEBUG
- static uint16_t pm[3]={0,1,2}, nc[6]={0,0x0FFF,0x0F00,0x00FF,0x00F0,0};
-  barPM(pm);
-  barNC(nc);
-  pm[0]++;
-  pm[1]+=2;
-  pm[2]+=4;
-
-#else
   // read the PM sensor
   pms.read();
 
-  // print/display PM values
+  // print values
   Serial.printf("PM1 %d, PM2.5 %d, PM10 %d [ug/m3], ",
     pms.pm[0],pms.pm[1],pms.pm[2]);
-  barPM(pms.pm);
-
-  // wait for 5 seconds
-  delay(5000);
-
-  // print/display Number/Count values
   Serial.printf("N0.3 %d, N0.5 %d, N1 %d, N2.5 %d, N5 %d, N10 %d [#/100cc]\n",
     pms.nc[0],pms.nc[1],pms.nc[2],pms.nc[3],pms.nc[4],pms.nc[5]);
-  barGraph(pms.nc, 6);
 
-
-  // wait for 5 seconds
-  delay(5000);
-#endif
+  // display values
+  barPM(pms.pm); // particulate matter
+  delay(5000);   // 5 sec
+  barNC(pms.nc); // number concentrarion
+  delay(5000);   // 5 sec
 }
