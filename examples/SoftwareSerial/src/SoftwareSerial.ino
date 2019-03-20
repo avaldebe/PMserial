@@ -18,8 +18,7 @@ void setup() {
   Serial.println(F("PMS sensor on SWSerial"));
   Serial.print(F("  RX:"));Serial.println(PMS_RX);
   Serial.print(F("  TX:"));Serial.println(PMS_TX);
-
-  pms.begin();
+  pms.init();
 }
 
 void loop() {

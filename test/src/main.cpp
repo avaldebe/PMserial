@@ -13,14 +13,14 @@
   #define MSG "PMS sensor on HardwareSerial2"
   SerialPM pms(PMS5003, Serial2);
 #elif defined(HAS_HW_SERIAL1) // leonardo & maple_mini
-  #define MSG "PMS sensor on HardwareSerial"
+  #define MSG "PMS sensor on HardwareSerial1"
   SerialPM pms(PMS5003, Serial1);
 #elif defined(HAS_SW_SERIAL)
   #define MSG "PMS sensor on SoftwareSerial"
   SoftwareSerial SWSerial(10,11);
   SerialPM pms(PMS5003, SWSerial);
 #else
-  #define MSG "PMS sensor on SoftwareSerial"
+  #define MSG "PMS sensor on HardwareSerial"
   SerialPM pms(PMS5003, Serial);
 #endif
 
@@ -29,7 +29,7 @@ void setup() {
   Serial.println(F("Booted"));
 
   Serial.println(F(MSG));
-  pms.begin();
+  pms.init();
 }
 
 void loop() {

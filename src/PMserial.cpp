@@ -64,7 +64,7 @@ const uint8_t
   cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
   trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
 
-void SerialPM::begin(){
+void SerialPM::init(){
   if(hwSerial) {
 #ifdef HAS_HW_SERIAL
     static_cast<HardwareSerial*>(uart)->begin(9600,SERIAL_8N1);

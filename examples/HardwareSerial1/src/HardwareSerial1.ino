@@ -14,7 +14,7 @@ void setup() {
   Serial.println(F("Booted"));
 
   Serial.println(F(MSG));
-  pms.begin();
+  pms.init();
 }
 
 void loop() {

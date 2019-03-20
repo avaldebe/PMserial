@@ -30,7 +30,7 @@ void setup() {
   Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
   Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",PMS_RX,PMS_TX);
-  pms.begin();
+  pms.init();
 
   Serial.printf("%02dx%02d OLED on SDA:GPIO%02d, SCL:GPIO%02d \n",
                 WIDTH, HEIGHT, SDA, SCL);

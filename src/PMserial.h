@@ -52,7 +52,6 @@ public:
 #ifdef HAS_SW_SERIAL
   SerialPM(PMS sensor, SoftwareSerial &serial) : pms(sensor) { uart=&serial; hwSerial=false; }
 #endif
-  void begin();
   void read(bool tsi_mode=false, bool truncated_num=false);
 
 protected:
