@@ -75,17 +75,7 @@ It is possible to define alternative pines by calling
 Serial1.begin(baud_rate, config, <rxPin>, <txPin>)
 ````
 Alas, this option is not supported by PMSerail.
-
-As Serial1 and Serial2 are not instantiated by default,
-in the example this we instantiate Serial2 with the name Serial1:
-
-```Arduino
-#ifdef ESP32
-// Serial1 and Serial2 are not instantiated by default, so do it here
-#include <HardwareSerial.h>
-HardwareSerial Serial1(2); // UART2 on GPIO16(RX),GPIO17(TX)
-#endif
-```
+Therefore, this example uses Serial2 instead.
 
 
 ```bash

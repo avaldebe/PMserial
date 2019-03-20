@@ -12,10 +12,7 @@
 SerialPM pms(PMS5003);
 
 #ifdef ESP32
-// Serial1 and Serial2 are not instantiated by default, so do it here
-#include <HardwareSerial.h>
-HardwareSerial Serial1(2); // UART2 on GPIO16(RX),GPIO17(TX)
-#define HAS_HW_SERIAL1
+#define HAS_HW_SERIAL2
 #elif defined(HAS_SW_SERIAL)
 SoftwareSerial SWSerial(10,11);
 #endif
@@ -24,8 +21,10 @@ void setup() {
   Serial.begin(9600);
   Serial.println(F("Booted"));
 
-// leonardo & maple_mini: Serial1 is HWserial
-#if   defined(HAS_HW_SERIAL1)
+#if   defined(HAS_HW_SERIAL2) // esp32: Serial2 is HWserial
+  Serial.println(F("PMS sensor on HardwareSerial2"));
+  pms.begin(Serial2);
+#elif defined(HAS_HW_SERIAL1) // leonardo & maple_mini: Serial1 is HWserial
   Serial.println(F("PMS sensor on HardwareSerial1"));
   pms.begin(Serial1);
 #elif defined(HAS_SW_SERIAL)  // test SWserial

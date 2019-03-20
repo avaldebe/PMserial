@@ -3,18 +3,17 @@
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
 SerialPM pms(PMS5003); // aka G5
 
-#ifdef ESP32
-// Serial1 and Serial2 are not instantiated by default, so do it here
-#include <HardwareSerial.h>
-HardwareSerial Serial1(2); // UART2 on GPIO16(RX),GPIO17(TX)
-#endif
-
 void setup() {
   Serial.begin(9600);
   Serial.println(F("Booted"));
 
+#ifdef ESP32
+  Serial.println(F("PMS sensor on HardwareSerial2"));
+  pms.begin(Serial2);
+#else
   Serial.println(F("PMS sensor on HardwareSerial1"));
   pms.begin(Serial1);
+#endif
   pms.init();
 }
 
