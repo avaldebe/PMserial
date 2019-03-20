@@ -51,6 +51,7 @@ public:
     case PLANTOWER_24B:
       bufferLen=24;
       has_num=false;
+      break;
     default:
       bufferLen=32;
       has_num=true;
