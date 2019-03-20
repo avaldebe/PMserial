@@ -6,10 +6,8 @@ const uint8_t PMS_RX=2, PMS_TX=0;
 #else
 const uint8_t PMS_RX=10, PMS_TX=11;
 #endif
-SoftwareSerial SWSerial(PMS_RX,PMS_TX);
-
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
-SerialPM pms(PMS5003, SWSerial);
+SerialPM pms(PMS5003, PMS_RX, PMS_TX);  // PMSx003, RX, TX
 
 void setup() {
   Serial.begin(9600);

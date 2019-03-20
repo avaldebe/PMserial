@@ -4,11 +4,10 @@
 #ifdef ESP8266
   #include <SoftwareSerial.h>
   const uint8_t PMS_RX=2, PMS_TX=0;
-  SoftwareSerial mySerial(PMS_RX,PMS_TX); // RX, TX
-  SerialPM pms(PMS5003, mySerial);
+  SerialPM pms(PMS5003, PMS_RX, PMS_TX);  // PMSx003, RX, TX
 #elif defined(ESP32)
   const uint8_t PMS_RX=16, PMS_TX=17;
-  SerialPM pms(PMS5003, Serial2);         // UART2
+  SerialPM pms(PMS5003, Serial2);         // PMSx003, UART
 #else
   #error "Unknown MCU"
 #endif
@@ -29,7 +28,8 @@ void setup() {
   Serial.printf("\nProgram: %s\n", __FILE__);
   Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
-  Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",PMS_RX,PMS_TX);
+  Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",
+                PMS_RX, PMS_TX);
   pms.init();
 
   Serial.printf("%02dx%02d OLED on SDA:GPIO%02d, SCL:GPIO%02d \n",

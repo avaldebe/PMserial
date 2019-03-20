@@ -9,19 +9,18 @@
 #include <Arduino.h>
 
 #include <PMserial.h>
-#if   defined(ESP32)          // esp32
+#if   defined(ESP32)
   #define MSG "PMS sensor on HardwareSerial2"
-  SerialPM pms(PMS5003, Serial2);
-#elif defined(HAS_HW_SERIAL1) // leonardo & maple_mini
+  SerialPM pms(PMS5003, Serial2); // PMSx003, UART
+#elif defined(HAS_HW_SERIAL1)
   #define MSG "PMS sensor on HardwareSerial1"
-  SerialPM pms(PMS5003, Serial1);
+  SerialPM pms(PMS5003, Serial1); // PMSx003, UART
 #elif defined(HAS_SW_SERIAL)
   #define MSG "PMS sensor on SoftwareSerial"
-  SoftwareSerial SWSerial(10,11);
-  SerialPM pms(PMS5003, SWSerial);
+  SerialPM pms(PMS5003, 10, 11);  // PMSx003, RX, TX
 #else
   #define MSG "PMS sensor on HardwareSerial"
-  SerialPM pms(PMS5003, Serial);
+  SerialPM pms(PMS5003, Serial);  // PMSx003, UART
 #endif
 
 void setup() {

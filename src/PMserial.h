@@ -45,13 +45,20 @@ public:
   uint16_t
     pm[3],  // particulate matter [ug/m3]
     nc[6];  // number concentration [#/100cc]
-  void init();
 #ifdef HAS_HW_SERIAL
-  SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor) { uart=&serial; hwSerial=true; }
+  SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor) {
+    uart=&serial;
+    hwSerial=true;
+  }
 #endif
 #ifdef HAS_SW_SERIAL
-  SerialPM(PMS sensor, SoftwareSerial &serial) : pms(sensor) { uart=&serial; hwSerial=false; }
+  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor) {
+    SoftwareSerial serial(rx,tx);
+    uart=&serial;
+    hwSerial=false;
+  }
 #endif
+  void init();
   void read(bool tsi_mode=false, bool truncated_num=false);
 
 protected:

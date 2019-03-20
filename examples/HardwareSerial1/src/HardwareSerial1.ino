@@ -3,10 +3,10 @@
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
 #ifdef ESP32
   #define MSG "PMS5003 on HardwareSerial2"
-  SerialPM pms(PMS5003, Serial2);
+  SerialPM pms(PMS5003, Serial2);         // PMSx003, UART
 #else
   #define MSG "PMS5003 on HardwareSerial1"
-  SerialPM pms(PMS5003, Serial1);
+  SerialPM pms(PMS5003, Serial1);         // PMSx003, UART
 #endif
 
 void setup() {
