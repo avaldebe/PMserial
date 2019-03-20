@@ -19,8 +19,8 @@ SSD1306 display(0x3c, SDA, SCL);
 // this is a 64x48 display, not 128x64
 const uint8_t 
   WIDTH=64, HEIGHT=48,
-  X0=WIDTH/2, X1=DISPLAY_WIDTH-X0, XM=(X0+X1)/2,
-  Y1=DISPLAY_HEIGHT, Y0=Y1-HEIGHT, YM=(Y0+Y1)/2;
+  X0=WIDTH/2, X1=WIDTH-X0, XM=(X0+X1)/2,
+  Y1=HEIGHT, Y0=Y1-HEIGHT, YM=(Y0+Y1)/2;
 
 //#define DEBUG
 
