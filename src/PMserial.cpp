@@ -64,21 +64,27 @@ const uint8_t
   cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
   trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
 
+void SerialPM::begin(){
+  if(hwSerial) {
 #ifdef HAS_HW_SERIAL
-void SerialPM::begin(HardwareSerial &serial){
-  serial.begin(9600,SERIAL_8N1);
-  uart = &serial;
-  init();
-}
+    static_cast<HardwareSerial*>(uart)->begin(9600,SERIAL_8N1);
 #endif
-
+  } else {
 #ifdef HAS_SW_SERIAL
-void SerialPM::begin(SoftwareSerial &serial){
-  serial.begin(9600);
-  uart = &serial;
-  init();
-}
+    static_cast<SoftwareSerial*>(uart)->begin(9600);
 #endif
+  }
+  switch (pms) {
+  case PLANTOWER_24B:
+    bufferLen=24;
+    has_num=false;
+    break;
+  default: // PLANTOWER_32B
+    bufferLen=32;
+    has_num=true;
+  }
+  trigRead(cfg,msgLen);  // set passive mode
+}
 
 void SerialPM::trigRead(const uint8_t *message, uint8_t lenght){
   while (uart->available()) {
@@ -92,7 +98,7 @@ void SerialPM::trigRead(const uint8_t *message, uint8_t lenght){
   uart->readBytes(buffer, bufferLen);
 }
 
-boolean SerialPM::checkBuffer(){
+bool SerialPM::checkBuffer(){
   uint16_t cksum=buff2word(bufferLen-2);
   for (uint8_t n=0; n<bufferLen-2; n++){
     cksum-=buffer[n];
@@ -101,11 +107,7 @@ boolean SerialPM::checkBuffer(){
   return (cksum==0);
 }
 
-void SerialPM::init(){
-  trigRead(cfg,msgLen);  // set passive mode
-}
-
-void SerialPM::read(boolean tsi_mode, boolean truncated_num){
+void SerialPM::read(bool tsi_mode, bool truncated_num){
   trigRead(trg,msgLen);  // read comand on passive mode
   if (!checkBuffer()) return; // only update values if buffer checks out
   uint8_t bin, n;

@@ -45,35 +45,25 @@ public:
   uint16_t
     pm[3],  // particulate matter [ug/m3]
     nc[6];  // number concentration [#/100cc]
-  boolean has_num;
-  SerialPM(PMS sensor) : pms(sensor) {
-    switch (pms) {
-    case PLANTOWER_24B:
-      bufferLen=24;
-      has_num=false;
-      break;
-    default:
-      bufferLen=32;
-      has_num=true;
-    }
-  }
+  void init();
 #ifdef HAS_HW_SERIAL
-  void begin(HardwareSerial &serial);
+  SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor) { uart=&serial; hwSerial=true; }
 #endif
 #ifdef HAS_SW_SERIAL
-  void begin(SoftwareSerial &serial);
+  SerialPM(PMS sensor, SoftwareSerial &serial) : pms(sensor) { uart=&serial; hwSerial=false; }
 #endif
-  void init();
-  void read(boolean tsi_mode=false, boolean truncated_num=false);
+  void begin();
+  void read(bool tsi_mode=false, bool truncated_num=false);
 
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;
   uint8_t bufferLen, buffer[32];
+  bool has_num, hwSerial;
 
   // utility functions
   void trigRead(const uint8_t *message, uint8_t lenght);
-  boolean checkBuffer();
+  bool checkBuffer();
 };
 
 #endif //_SERIALPM_H

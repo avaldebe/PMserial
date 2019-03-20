@@ -1,20 +1,20 @@
 // HardwareSerial1.ino: Read PMS5003 sensor on Serial1
 
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
-SerialPM pms(PMS5003); // aka G5
+#ifdef ESP32
+  #define MSG "PMS5003 on HardwareSerial2"
+  SerialPM pms(PMS5003, Serial2);
+#else
+  #define MSG "PMS5003 on HardwareSerial1"
+  SerialPM pms(PMS5003, Serial1);
+#endif
 
 void setup() {
   Serial.begin(9600);
   Serial.println(F("Booted"));
 
-#ifdef ESP32
-  Serial.println(F("PMS sensor on HardwareSerial2"));
-  pms.begin(Serial2);
-#else
-  Serial.println(F("PMS sensor on HardwareSerial1"));
-  pms.begin(Serial1);
-#endif
-  pms.init();
+  Serial.println(F(MSG));
+  pms.begin();
 }
 
 void loop() {

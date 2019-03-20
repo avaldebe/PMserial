@@ -1,16 +1,16 @@
 // PMSerail: OLED_64x48.ino
-
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
-SerialPM pms(PMS5003); // aka G5
 
 #ifdef ESP8266
-#include <SoftwareSerial.h>
-const uint8_t PMS_RX=2, PMS_TX=0;
-SoftwareSerial mySerial(PMS_RX,PMS_TX); // RX, TX
+  #include <SoftwareSerial.h>
+  const uint8_t PMS_RX=2, PMS_TX=0;
+  SoftwareSerial mySerial(PMS_RX,PMS_TX); // RX, TX
+  SerialPM pms(PMS5003, mySerial);
 #elif defined(ESP32)
-#include <HardwareSerial.h>
-const uint8_t PMS_RX=16, PMS_TX=17;
-HardwareSerial mySerial(2);   // UART2 on GPIO16(RX),GPIO17(TX)
+  const uint8_t PMS_RX=16, PMS_TX=17;
+  SerialPM pms(PMS5003, Serial2);         // UART2
+#else
+  #error "Unknown MCU"
 #endif
 
 #include <Wire.h>
@@ -29,9 +29,8 @@ void setup() {
   Serial.printf("\nProgram: %s\n", __FILE__);
   Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
-  pms.begin(mySerial);
   Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",PMS_RX,PMS_TX);
-  pms.init();
+  pms.begin();
 
   Serial.printf("%02dx%02d OLED on SDA:GPIO%02d, SCL:GPIO%02d \n",
                 WIDTH, HEIGHT, SDA, SCL);

@@ -9,32 +9,27 @@
 #include <Arduino.h>
 
 #include <PMserial.h>
-SerialPM pms(PMS5003);
-
-#ifdef ESP32
-#define HAS_HW_SERIAL2
+#if   defined(ESP32)          // esp32
+  #define MSG "PMS sensor on HardwareSerial2"
+  SerialPM pms(PMS5003, Serial2);
+#elif defined(HAS_HW_SERIAL1) // leonardo & maple_mini
+  #define MSG "PMS sensor on HardwareSerial"
+  SerialPM pms(PMS5003, Serial1);
 #elif defined(HAS_SW_SERIAL)
-SoftwareSerial SWSerial(10,11);
+  #define MSG "PMS sensor on SoftwareSerial"
+  SoftwareSerial SWSerial(10,11);
+  SerialPM pms(PMS5003, SWSerial);
+#else
+  #define MSG "PMS sensor on SoftwareSerial"
+  SerialPM pms(PMS5003, Serial);
 #endif
 
 void setup() {
   Serial.begin(9600);
   Serial.println(F("Booted"));
 
-#if   defined(HAS_HW_SERIAL2) // esp32: Serial2 is HWserial
-  Serial.println(F("PMS sensor on HardwareSerial2"));
-  pms.begin(Serial2);
-#elif defined(HAS_HW_SERIAL1) // leonardo & maple_mini: Serial1 is HWserial
-  Serial.println(F("PMS sensor on HardwareSerial1"));
-  pms.begin(Serial1);
-#elif defined(HAS_SW_SERIAL)  // test SWserial
-  Serial.println(F("PMS sensor on SoftwareSerial"));
-  pms.begin(SWSerial);
-#else
-  Serial.println(F("PMS sensor on HardwareSerial"));
-  pms.begin(Serial);
-#endif
-  pms.init();
+  Serial.println(F(MSG));
+  pms.begin();
 }
 
 void loop() {
