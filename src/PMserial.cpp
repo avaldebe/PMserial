@@ -50,7 +50,7 @@ DATA(MSB,LSB): Message body (28 bytes), 14 pairs of bytes (MSB,LSB)
   14( 31, 32): cksum=byte01+..+byte30
 */
 
-#define buff2word(n) (buffer[n]<<8)|buffer[n+1]
+#define buff2word(n) ((buffer[n]<<8)|buffer[n+1])
 const uint8_t
   TSI_START =  4,             // PM [ug/m3] (TSI standard)
   ATM_START = 10,             // PM [ug/m3] (std. atmosphere)
@@ -76,29 +76,56 @@ void SerialPM::init(){
   }
   switch (pms) {
   case PLANTOWER_24B:
-    bufferLen=24;
     has_num=false;
     break;
   default: // PLANTOWER_32B
-    bufferLen=32;
     has_num=true;
   }
-  trigRead(cfg,msgLen);  // set passive mode
+  uart->write(cfg, msgLen);  // set passive mode
+  uart->flush();
 }
 
-void SerialPM::trigRead(const uint8_t *message, uint8_t lenght){
+SerialPM::STATUS SerialPM::trigRead(){
   while (uart->available()) {
     uart->read();           // empty the RX buffer
   }
-  uart->write(message, lenght);
-  uart->flush();            // wait until message is transmitted
-  while (!uart->available()) {
-    delay(50);              // ~650ms to complete a measurements
+  uart->write(trg, msgLen); // passive mode read
+  uart->flush();
+
+  for (uint8_t i=0; i<20 && uart->available()<4; i++ ) {
+    delay(50);              // wait until the message header is recieved
+    yield();                // ~650ms to complete a measurements
   }
-  uart->readBytes(buffer, bufferLen);
+
+  // we should an asnwer/message after 650ms
+  if (!uart->available())
+    return ERROR_TIMEOUT;
+
+  // read message header
+  const size_t headLen = 4;       // message header lenght
+  if (uart->readBytes(&buffer[0], headLen) != headLen)
+    return ERROR_MSG_HEADER;
+
+  // message header starts with 'BM'
+  if (buff2word(0)!=0x424D)
+    return ERROR_MSG_START;
+
+  // full message should fit in the buffer
+  size_t bodyLen = buff2word(2);  // message body lenght
+  if (headLen+bodyLen>BUFFER_LEN)
+    return ERROR_MSG_LENGHT;
+  
+  // read message body
+  if (uart->readBytes(&buffer[headLen], bodyLen) != bodyLen)
+    return ERROR_MSG_BODY;
+
+  if (!checkBuffer(headLen+bodyLen))
+    return ERROR_MSG_CKSUM;
+
+  return OK;
 }
 
-bool SerialPM::checkBuffer(){
+bool SerialPM::checkBuffer(size_t bufferLen){
   uint16_t cksum=buff2word(bufferLen-2);
   for (uint8_t n=0; n<bufferLen-2; n++){
     cksum-=buffer[n];
@@ -107,19 +134,29 @@ bool SerialPM::checkBuffer(){
   return (cksum==0);
 }
 
-void SerialPM::read(bool tsi_mode, bool truncated_num){
-  trigRead(trg,msgLen);  // read comand on passive mode
-  if (!checkBuffer()) return; // only update values if buffer checks out
+void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
   uint8_t bin, n;
   for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2){
     pm[bin] = buff2word(n);
   }
-  if (!has_num) return;
+
+  if (!has_num)
+    return;
   for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
   }
-  if (!truncated_num) return;
+
+  if (!truncated_num)
+    return;
   for (bin=5; bin>0; bin--){
-    nc[bin] -= nc[bin-1];   //
+    nc[bin] -= nc[bin-1];   // de-accumulate number concentrations
   }
+}
+
+SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num){
+  STATUS status = trigRead();  // read comand on passive mode
+  if (status != OK) // decode message only if buffer checks out
+    return status;
+  decodeBuffer();
+  return OK;
 }

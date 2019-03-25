@@ -59,17 +59,28 @@ public:
   }
 #endif
   void init();
-  void read(bool tsi_mode=false, bool truncated_num=false);
+  enum STATUS {
+    OK,
+    ERROR_TIMEOUT,
+    ERROR_MSG_HEADER,
+    ERROR_MSG_BODY,
+    ERROR_MSG_START,
+    ERROR_MSG_LENGHT,
+    ERROR_MSG_CKSUM
+  };
+  STATUS read(bool tsi_mode=false, bool truncated_num=false);
 
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;
-  uint8_t bufferLen, buffer[32];
+  static const uint8_t BUFFER_LEN = 32;
+  uint8_t buffer[BUFFER_LEN];
   bool has_num, hwSerial;
 
   // utility functions
-  void trigRead(const uint8_t *message, uint8_t lenght);
-  bool checkBuffer();
+  STATUS trigRead();
+  bool checkBuffer(size_t bufferLen);
+  void decodeBuffer(bool tsi_mode=false, bool truncated_num=false);
 };
 
 #endif //_SERIALPM_H

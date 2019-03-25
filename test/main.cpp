@@ -33,10 +33,34 @@ void setup() {
 
 void loop() {
   // read the PM sensor
-  pms.read();
-  Serial.print(F("PM1 "))  ;Serial.print(pms.pm[0]);Serial.print(F(", "));
-  Serial.print(F("PM2.5 "));Serial.print(pms.pm[1]);Serial.print(F(", "));
-  Serial.print(F("PM10 ")) ;Serial.print(pms.pm[2]);Serial.println(F(" [ug/m3]"));
+  switch (pms.read()) {
+  case pms.OK:
+    Serial.print(F("PM1 "))  ;Serial.print(pms.pm[0]);Serial.print(F(", "));
+    Serial.print(F("PM2.5 "));Serial.print(pms.pm[1]);Serial.print(F(", "));
+    Serial.print(F("PM10 ")) ;Serial.print(pms.pm[2]);Serial.println(F(" [ug/m3]"));
+    break;
+  case pms.ERROR_TIMEOUT:
+    Serial.println(F("Timeout error"));
+    break;
+  case pms.ERROR_MSG_HEADER:
+    Serial.println(F("Incomplete message header"));
+    break;
+  case pms.ERROR_MSG_BODY:
+    Serial.println(F("Incomplete message boddy"));
+    break;
+  case pms.ERROR_MSG_START:
+    Serial.println(F("Wrong message start"));
+    break;
+  case pms.ERROR_MSG_LENGHT:
+    Serial.println(F("Message too long"));
+    break;
+  case pms.ERROR_MSG_CKSUM:
+    Serial.println(F("Wrong message checksum"));
+    break;
+  default:
+    Serial.println(F("Unknown error"));
+    break;
+  }
 
   // wait for 10 seconds
   delay(10000);
