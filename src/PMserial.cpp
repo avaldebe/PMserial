@@ -92,10 +92,10 @@ SerialPM::STATUS SerialPM::trigRead(){
   uart->write(trg, msgLen); // passive mode read
   uart->flush();
 
-  for (uint8_t i=0; i<20 && uart->available()<4; i++ ) {
-    delay(50);              // wait until the message header is recieved
-    yield();                // ~650ms to complete a measurements
-  }
+  uint16_t start_ms = millis();
+  do {                      // ~650ms to complete a measurements
+    delay(10);              // wait up to 800ms
+  } while (!uart->available() && millis()-start_ms<800);
 
   // we should an asnwer/message after 650ms
   if (!uart->available())
