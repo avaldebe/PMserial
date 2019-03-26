@@ -11,16 +11,16 @@
 #include <PMserial.h>
 #if   defined(ESP32)
   #define MSG "PMS sensor on HardwareSerial2"
-  SerialPM pms(PMS5003, Serial2); // PMSx003, UART
+  SerialPM pms(PMSx003, Serial2); // PMSx003, UART
 #elif defined(HAS_HW_SERIAL1)
   #define MSG "PMS sensor on HardwareSerial1"
-  SerialPM pms(PMS5003, Serial1); // PMSx003, UART
+  SerialPM pms(PMSx003, Serial1); // PMSx003, UART
 #elif defined(HAS_SW_SERIAL)
   #define MSG "PMS sensor on SoftwareSerial"
-  SerialPM pms(PMS5003, 10, 11);  // PMSx003, RX, TX
+  SerialPM pms(PMSx003, 10, 11);  // PMSx003, RX, TX
 #else
   #define MSG "PMS sensor on HardwareSerial"
-  SerialPM pms(PMS5003, Serial);  // PMSx003, UART
+  SerialPM pms(PMSx003, Serial);  // PMSx003, UART
 #endif
 
 void setup() {
@@ -42,6 +42,9 @@ void loop() {
   case pms.ERROR_TIMEOUT:
     Serial.println(F("Timeout error"));
     break;
+  case pms.ERROR_MSG_UNKNOWN:
+    Serial.println(F("Unknown message protocol"));
+    break;
   case pms.ERROR_MSG_HEADER:
     Serial.println(F("Incomplete message header"));
     break;
@@ -56,6 +59,9 @@ void loop() {
     break;
   case pms.ERROR_MSG_CKSUM:
     Serial.println(F("Wrong message checksum"));
+    break;
+  case pms.ERROR_PMS_TYPE:
+    Serial.println(F("Wrong PMSx003 sensor type"));
     break;
   default:
     Serial.println(F("Unknown error"));

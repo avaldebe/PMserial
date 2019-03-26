@@ -31,8 +31,10 @@
 #endif
 
 enum PMS {
+  PLANTOWER_AUTO,// self discovery
   PLANTOWER_24B, // 24bit long message, no count info (LBC)
   PLANTOWER_32B, // 32bit long message, w/count info (LBC)
+  PMSx003=PLANTOWER_AUTO,// self discovery
   PMS1003=PLANTOWER_32B, // G1
   PMS3003=PLANTOWER_24B, // G3
   PMS5003=PLANTOWER_32B, // G5
@@ -62,6 +64,8 @@ public:
   enum STATUS {
     OK,
     ERROR_TIMEOUT,
+    ERROR_PMS_TYPE,
+    ERROR_MSG_UNKNOWN,
     ERROR_MSG_HEADER,
     ERROR_MSG_BODY,
     ERROR_MSG_START,
@@ -75,7 +79,7 @@ protected:
   PMS pms;
   static const uint8_t BUFFER_LEN = 32;
   uint8_t buffer[BUFFER_LEN];
-  bool has_num, hwSerial;
+  bool hwSerial;
 
   // utility functions
   STATUS trigRead();

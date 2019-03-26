@@ -74,13 +74,6 @@ void SerialPM::init(){
     static_cast<SoftwareSerial*>(uart)->begin(9600);
 #endif
   }
-  switch (pms) {
-  case PLANTOWER_24B:
-    has_num=false;
-    break;
-  default: // PLANTOWER_32B
-    has_num=true;
-  }
   uart->write(cfg, msgLen);  // set passive mode
   uart->flush();
 }
@@ -102,7 +95,7 @@ SerialPM::STATUS SerialPM::trigRead(){
     return ERROR_TIMEOUT;
 
   // read message header
-  const size_t headLen = 4;       // message header lenght
+  const size_t headLen = 4;             // message header lenght
   if (uart->readBytes(&buffer[0], headLen) != headLen)
     return ERROR_MSG_HEADER;
 
@@ -110,16 +103,36 @@ SerialPM::STATUS SerialPM::trigRead(){
   if (buff2word(0)!=0x424D)
     return ERROR_MSG_START;
 
+  // check message lenght against stated sensor type
+  size_t bodyLen = buff2word(2);        // message body lenght
+  size_t messageLen = headLen+bodyLen;  // full message lenght
+  PMS sensor;
+  switch (messageLen) {
+  case 24:
+    sensor=PLANTOWER_24B;
+    break;
+  case 32:
+    sensor=PLANTOWER_32B;
+    break;
+  default:
+    return ERROR_MSG_UNKNOWN;
+  }
+  // self discovery
+  if (pms==PLANTOWER_AUTO)
+    pms=sensor;
+  // check sensor type
+  if (pms!=sensor)
+    return ERROR_PMS_TYPE;
+
   // full message should fit in the buffer
-  size_t bodyLen = buff2word(2);  // message body lenght
-  if (headLen+bodyLen>BUFFER_LEN)
+  if (messageLen>BUFFER_LEN)
     return ERROR_MSG_LENGHT;
   
   // read message body
   if (uart->readBytes(&buffer[headLen], bodyLen) != bodyLen)
     return ERROR_MSG_BODY;
 
-  if (!checkBuffer(headLen+bodyLen))
+  if (!checkBuffer(messageLen))
     return ERROR_MSG_CKSUM;
 
   return OK;
@@ -140,7 +153,7 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
     pm[bin] = buff2word(n);
   }
 
-  if (!has_num)
+  if (pms==PLANTOWER_24B) // 24bit long message, no count info
     return;
   for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
