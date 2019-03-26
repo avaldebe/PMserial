@@ -1,3 +1,7 @@
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
 *.swp
 .vscode
 *.gch
