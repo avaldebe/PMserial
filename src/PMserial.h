@@ -32,8 +32,8 @@
 
 enum PMS {
   PLANTOWER_AUTO,// self discovery
-  PLANTOWER_24B, // 24bit long message, no count info (LBC)
-  PLANTOWER_32B, // 32bit long message, w/count info (LBC)
+  PLANTOWER_24B, // 24 byte long message, no count info (LBC)
+  PLANTOWER_32B, // 32 byte long message, w/count info (LBC)
   PMSx003=PLANTOWER_AUTO,// self discovery
   PMS1003=PLANTOWER_32B, // G1
   PMS3003=PLANTOWER_24B, // G3
@@ -49,15 +49,15 @@ public:
     nc[6];  // number concentration [#/100cc]
 #ifdef HAS_HW_SERIAL
   SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor) {
-    uart=&serial;
-    hwSerial=true;
+    uart = &serial;
+    hwSerial = true;
   }
 #endif
 #ifdef HAS_SW_SERIAL
   SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor) {
-    SoftwareSerial serial(rx,tx);
-    uart=&serial;
-    hwSerial=false;
+    SoftwareSerial serial(rx, tx);
+    uart = &serial;
+    hwSerial = false;
   }
 #endif
   void init();

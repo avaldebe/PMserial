@@ -153,7 +153,7 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
     pm[bin] = buff2word(n);
   }
 
-  if (pms==PLANTOWER_24B) // 24bit long message, no count info
+  if (pms==PLANTOWER_24B) // 24 byte long message, no count info
     return;
   for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
