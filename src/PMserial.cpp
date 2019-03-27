@@ -50,7 +50,6 @@ DATA(MSB,LSB): Message body (28 bytes), 14 pairs of bytes (MSB,LSB)
   14( 31, 32): cksum=byte01+..+byte30
 */
 
-#define buff2word(n) ((buffer[n]<<8)|buffer[n+1])
 const uint8_t
   TSI_START =  4,             // PM [ug/m3] (TSI standard)
   ATM_START = 10,             // PM [ug/m3] (std. atmosphere)
