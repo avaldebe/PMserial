@@ -82,7 +82,9 @@ public:
     ERROR_MSG_LENGHT,
     ERROR_MSG_CKSUM
   };
+  STATUS status;
   STATUS read(bool tsi_mode=false, bool truncated_num=false);
+  operator bool() { return status == OK; }
 
 protected:
   Stream *uart; // hardware/software serial

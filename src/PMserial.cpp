@@ -166,9 +166,8 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
 }
 
 SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num){
-  STATUS status = trigRead();  // read comand on passive mode
-  if (status != OK) // decode message only if buffer checks out
+  status = trigRead();  // read comand on passive mode
+  if (status == OK) // decode message only if buffer checks out
+    decodeBuffer();
     return status;
-  decodeBuffer();
-  return OK;
 }
