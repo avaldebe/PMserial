@@ -51,7 +51,7 @@ public:
       uint16_t nc[6]; // number concentration [#/100cc]
     };
     struct {
-      // pmX [ug/m3]: PM1, PM2.5 & PM10
+      // pmX [ug/m3]: PM1.0, PM2.5 & PM10
       uint16_t pm01, pm25, pm10;
       // nXpY [#/100cc]: number concentrations under X.Y nm
       uint16_t n0p3, n0p5, n1p0, n2p5, n5p0, n10p0;
@@ -85,7 +85,8 @@ public:
   STATUS status;
   STATUS read(bool tsi_mode=false, bool truncated_num=false);
   operator bool() { return status == OK; }
-  inline bool has_number_concentration() {return pms == PLANTOWER_32B; }
+  inline bool has_particulate_matter() { return status == OK; }
+  inline bool has_number_concentration() {return (status == OK) && (pms == PLANTOWER_32B); }
 
 protected:
   Stream *uart; // hardware/software serial

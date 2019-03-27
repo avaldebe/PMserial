@@ -148,6 +148,8 @@ bool SerialPM::checkBuffer(size_t bufferLen){
 
 void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
   uint8_t bin, n;
+  if (!has_particulate_matter())
+    return;
   for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2){
     pm[bin] = buff2word(n);
   }
@@ -167,7 +169,6 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
 
 SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num){
   status = trigRead();  // read comand on passive mode
-  if (status == OK) // decode message only if buffer checks out
-    decodeBuffer();
-    return status;
+  decodeBuffer();       // decode message only if buffer checks out
+  return status;
 }
