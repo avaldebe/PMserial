@@ -85,6 +85,7 @@ public:
   STATUS status;
   STATUS read(bool tsi_mode=false, bool truncated_num=false);
   operator bool() { return status == OK; }
+  inline bool has_number_concentration() {return pms == PLANTOWER_32B; }
 
 protected:
   Stream *uart; // hardware/software serial
