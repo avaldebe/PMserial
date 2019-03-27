@@ -160,16 +160,44 @@ void showNC(uint16_t *nc, const uint16_t msec){
 void loop() {
   // read the PM sensor
   pms.read();
+  if(pms){  // sucessfull read
+    // print values
+    Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]; ",
+      pms.pm01,pms.pm25,pms.pm10);
+    Serial.printf("N0.3 %4d, N0.5 %3d, N1.0 %2d, N2.5 %2d, N5.0 %2d, N10 %2d [#/100cc]\n",
+      pms.n0p3,pms.n0p5,pms.n1p0,pms.n2p5,pms.n5p0,pms.n10p0);
 
-  // print values
-  Serial.printf("PM1 %2d, PM2.5 %2d, PM10 %2d [ug/m3]; ",
-    pms.pm01,pms.pm25,pms.pm10);
-  Serial.printf("N0.3 %4d, N0.5 %3d, N1 %2d, N2.5 %2d, N5 %2d, N10 %2d [#/100cc]\n",
-    pms.n0p3,pms.n0p5,pms.n1p0,pms.n2p5,pms.n5p0,pms.n10p0);
-
-  // display values
-  showPM(pms.pm, 5000); // particulate matter, wait 5 sec
-  plotPM(pms.pm, 5000);
-  showNC(pms.nc, 5000); // number concentrarion, wait 5 sec
-  plotNC(pms.nc, 5000);
+    // display values
+    showPM(pms.pm, 5000); // particulate matter, wait 5 sec
+    plotPM(pms.pm, 5000);
+    showNC(pms.nc, 5000); // number concentrarion, wait 5 sec
+    plotNC(pms.nc, 5000);
+  } else { // something went wrong
+    switch (pms.status) {
+    case pms.ERROR_TIMEOUT:
+      Serial.println(F(PMS_ERROR_TIMEOUT));
+      break;
+    case pms.ERROR_MSG_UNKNOWN:
+      Serial.println(F(PMS_ERROR_MSG_UNKNOWN));
+      break;
+    case pms.ERROR_MSG_HEADER:
+      Serial.println(F(PMS_ERROR_MSG_HEADER));
+      break;
+    case pms.ERROR_MSG_BODY:
+      Serial.println(F(PMS_ERROR_MSG_BODY));
+      break;
+    case pms.ERROR_MSG_START:
+      Serial.println(F(PMS_ERROR_MSG_START));
+      break;
+    case pms.ERROR_MSG_LENGHT:
+      Serial.println(F(PMS_ERROR_MSG_LENGHT));
+      break;
+    case pms.ERROR_MSG_CKSUM:
+      Serial.println(F(PMS_ERROR_MSG_CKSUM));
+      break;
+    case pms.ERROR_PMS_TYPE:
+      Serial.println(F(PMS_ERROR_MSG_CKSUM));
+      break;
+    }
+  }
 }

@@ -31,43 +31,68 @@ void setup() {
   pms.init();
 }
 
-void loop() {
-  // read the PM sensor
-  switch (pms.read()) {
+void printPMS(){
+  if (!pms.has_particulate_matter()) return;
+ #if defined(ESP8266) || defined(ESP8266)
+  Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]\n",
+    pms.pm01,pms.pm25,pms.pm10);
+ #else
+  Serial.print(F("PM1.0 "));Serial.print(pms.pm01);Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));Serial.print(pms.pm25);Serial.print(F(", "));
+  Serial.print(F("PM10 ")) ;Serial.print(pms.pm10);Serial.println(F(" [ug/m3]"));
+#endif
+
+  if (!pms.has_number_concentration()) return;
+ #if defined(ESP8266) || defined(ESP8266)
+  Serial.printf("N0.3 %4d, N0.5 %3d, N1.0 %2d, N2.5 %2d, N5.0 %2d, N10 %2d [#/100cc]\n",
+    pms.n0p3,pms.n0p5,pms.n1p0,pms.n2p5,pms.n5p0,pms.n10p0);
+ #else
+  Serial.print(F("N0.3 "));Serial.print(pms.n0p3);Serial.print(F(", "));
+  Serial.print(F("N0.5 "));Serial.print(pms.n0p5);Serial.print(F(", "));
+  Serial.print(F("N1.0 "));Serial.print(pms.n1p0);Serial.print(F(", "));
+  Serial.print(F("N2.5 "));Serial.print(pms.n2p5);Serial.print(F(", "));
+  Serial.print(F("N5.0 "));Serial.print(pms.n5p0);Serial.print(F(", "));
+  Serial.print(F("N10 "));Serial.print(pms.n10p0);Serial.println(F(" [#/100cc]"));
+#endif
+}
+
+void statusPMS(){
+  switch (pms.status) {
   case pms.OK:
-    Serial.print(F("PM1 "))  ;Serial.print(pms.pm[0]);Serial.print(F(", "));
-    Serial.print(F("PM2.5 "));Serial.print(pms.pm[1]);Serial.print(F(", "));
-    Serial.print(F("PM10 ")) ;Serial.print(pms.pm[2]);Serial.println(F(" [ug/m3]"));
+    printPMS();
     break;
   case pms.ERROR_TIMEOUT:
-    Serial.println(F("Timeout error"));
+    Serial.println(F(PMS_ERROR_TIMEOUT));
     break;
   case pms.ERROR_MSG_UNKNOWN:
-    Serial.println(F("Unknown message protocol"));
+    Serial.println(F(PMS_ERROR_MSG_UNKNOWN));
     break;
   case pms.ERROR_MSG_HEADER:
-    Serial.println(F("Incomplete message header"));
+    Serial.println(F(PMS_ERROR_MSG_HEADER));
     break;
   case pms.ERROR_MSG_BODY:
-    Serial.println(F("Incomplete message boddy"));
+    Serial.println(F(PMS_ERROR_MSG_BODY));
     break;
   case pms.ERROR_MSG_START:
-    Serial.println(F("Wrong message start"));
+    Serial.println(F(PMS_ERROR_MSG_START));
     break;
   case pms.ERROR_MSG_LENGHT:
-    Serial.println(F("Message too long"));
+    Serial.println(F(PMS_ERROR_MSG_LENGHT));
     break;
   case pms.ERROR_MSG_CKSUM:
-    Serial.println(F("Wrong message checksum"));
+    Serial.println(F(PMS_ERROR_MSG_CKSUM));
     break;
   case pms.ERROR_PMS_TYPE:
-    Serial.println(F("Wrong PMSx003 sensor type"));
+    Serial.println(F(PMS_ERROR_MSG_CKSUM));
     break;
   default:
     Serial.println(F("Unknown error"));
     break;
   }
+}
 
-  // wait for 10 seconds
-  delay(10000);
+void loop() {
+  pms.read();   // read the PM sensor
+  statusPMS();  // print result/error
+  delay(10000); // wait for 10 seconds
 }

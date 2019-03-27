@@ -13,21 +13,21 @@
 
 #define HAS_HW_SERIAL
 #ifdef HAS_HW_SERIAL
-#include <HardwareSerial.h>
+  #include <HardwareSerial.h>
 #endif
 
 #if defined(__AVR__) || defined(ESP8266)
-#define HAS_SW_SERIAL
-#include <SoftwareSerial.h>
+  #define HAS_SW_SERIAL
+  #include <SoftwareSerial.h>
 #endif
 
 #if defined(HAS_HWSERIAL1) || defined(BOARD_HAVE_USART1)
-#define HAS_HW_SERIAL1
+  #define HAS_HW_SERIAL1
 #endif
 
 // leonardo & maple_mini: Serial1 is HWserial
 #if defined(__AVR_ATmega32U4__) || defined(SERIAL_USB)
-#define HAS_USB_SERIAL
+  #define HAS_USB_SERIAL
 #endif
 
 enum PMS {
@@ -71,6 +71,14 @@ public:
   }
 #endif
   void init();
+  #define PMS_ERROR_TIMEOUT     "Timeout error"
+  #define PMS_ERROR_PMS_TYPE    "Wrong PMSx003 sensor type"
+  #define PMS_ERROR_MSG_UNKNOWN "Unknown message protocol"
+  #define PMS_ERROR_MSG_HEADER  "Incomplete message header"
+  #define PMS_ERROR_MSG_BODY    "Incomplete message boddy"
+  #define PMS_ERROR_MSG_START   "Wrong message start"
+  #define PMS_ERROR_MSG_LENGHT  "Message too long"
+  #define PMS_ERROR_MSG_CKSUM   "Wrong message checksum"
   enum STATUS {
     OK,
     ERROR_TIMEOUT,
@@ -90,7 +98,7 @@ public:
 
 protected:
   Stream *uart; // hardware/software serial
-  PMS pms;
+  PMS pms;      // sensor type/message protocol
   static const uint8_t BUFFER_LEN = 32;
   uint8_t buffer[BUFFER_LEN];
   bool hwSerial;
