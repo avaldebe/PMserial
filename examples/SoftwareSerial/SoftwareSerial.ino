@@ -26,12 +26,12 @@ void loop() {
 #ifdef ESP8266
   // print formatted results
   Serial.printf("PM1 %d, PM2.5 %d, PM10 %d [ug/m3]\n",
-    pms.pm[0],pms.pm[1],pms.pm[2]);
+    pms.pm01,pms.pm25,pms.pm10);
 #else
   // print the results
-  Serial.print(F("PM1 "))  ;Serial.print(pms.pm[0]);Serial.print(F(", "));
-  Serial.print(F("PM2.5 "));Serial.print(pms.pm[1]);Serial.print(F(", "));
-  Serial.print(F("PM10 ")) ;Serial.print(pms.pm[2]);Serial.println(F(" [ug/m3]"));
+  Serial.print(F("PM1 "))  ;Serial.print(pms.pm01);Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));Serial.print(pms.pm25);Serial.print(F(", "));
+  Serial.print(F("PM10 ")) ;Serial.print(pms.pm10);Serial.println(F(" [ug/m3]"));
 #endif
 
   // wait for 10 seconds

@@ -163,9 +163,9 @@ void loop() {
 
   // print values
   Serial.printf("PM1 %2d, PM2.5 %2d, PM10 %2d [ug/m3]; ",
-    pms.pm[0],pms.pm[1],pms.pm[2]);
+    pms.pm01,pms.pm25,pms.pm10);
   Serial.printf("N0.3 %4d, N0.5 %3d, N1 %2d, N2.5 %2d, N5 %2d, N10 %2d [#/100cc]\n",
-    pms.nc[0],pms.nc[1],pms.nc[2],pms.nc[3],pms.nc[4],pms.nc[5]);
+    pms.n0p3,pms.n0p5,pms.n1p0,pms.n2p5,pms.n5p0,pms.n10p0);
 
   // display values
   showPM(pms.pm, 5000); // particulate matter, wait 5 sec
