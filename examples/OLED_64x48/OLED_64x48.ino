@@ -28,7 +28,7 @@ void setup() {
   Serial.printf("\nProgram: %s\n", __FILE__);
   Serial.printf("Build: %s %s\n", __DATE__, __TIME__);
 
-  Serial.printf("PMS sensor on RX:GPIO%02d, TX:GPIO%02%d\n",
+  Serial.printf("PMS5003 on RX:GPIO%02d, TX:GPIO%02d\n",
                 PMS_RX, PMS_TX);
   pms.init();
 
@@ -84,7 +84,7 @@ void plotPM(uint16_t *pm, const uint16_t msec){
   delay(msec);
 }
 void plotNC(uint16_t *nc, const uint16_t msec){
-  const uint8_t nbin=6, barWidth=WIDTH/nbin, x0=X0-barWidth;
+  const uint8_t nbin=6, barWidth=WIDTH/nbin;
   uint8_t bin, scale, barHeight;
 
   // rescale input, if necesary
@@ -174,6 +174,8 @@ void loop() {
     plotNC(pms.nc, 5000);
   } else { // something went wrong
     switch (pms.status) {
+    case pms.OK: // should never come here
+      break;     // included to compile without warnings
     case pms.ERROR_TIMEOUT:
       Serial.println(F(PMS_ERROR_TIMEOUT));
       break;
@@ -196,7 +198,7 @@ void loop() {
       Serial.println(F(PMS_ERROR_MSG_CKSUM));
       break;
     case pms.ERROR_PMS_TYPE:
-      Serial.println(F(PMS_ERROR_MSG_CKSUM));
+      Serial.println(F(PMS_ERROR_PMS_TYPE));
       break;
     }
   }
