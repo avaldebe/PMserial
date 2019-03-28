@@ -106,7 +106,7 @@ protected:
   // utility functions
   STATUS trigRead();
   bool checkBuffer(size_t bufferLen);
-  void decodeBuffer(bool tsi_mode=false, bool truncated_num=false);
+  void decodeBuffer(bool tsi_mode, bool truncated_num);
   inline uint16_t buff2word(uint8_t n){ return (buffer[n]<<8)|buffer[n+1]; }
 };
 

@@ -57,11 +57,11 @@ const uint8_t
 
 const uint8_t
   msgLen = 7,
-//slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
-//wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
-//cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
   cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
   trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
+//act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
+//slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
+//wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
 
 void SerialPM::init(){
   if(hwSerial) {
@@ -150,25 +150,25 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
   uint8_t bin, n;
   if (!has_particulate_matter())
     return;
-  for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2){
+  for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2) {
     pm[bin] = buff2word(n);
   }
 
   if (!has_number_concentration())
     return;
-  for (bin=0, n=NUM_START; bin<6; bin++, n+=2){
+  for (bin=0, n=NUM_START; bin<6; bin++, n+=2) {
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
   }
 
   if (!truncated_num)
     return;
-  for (bin=5; bin>0; bin--){
+  for (bin=5; bin>0; bin--) {
     nc[bin] -= nc[bin-1];   // de-accumulate number concentrations
   }
 }
 
 SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num){
   status = trigRead();  // read comand on passive mode
-  decodeBuffer();       // decode message only if buffer checks out
+  decodeBuffer(tsi_mode, truncated_num); // decode message only if buffer checks out
   return status;
 }
