@@ -1,12 +1,10 @@
 // SoftwareSerial.ino: Read PMS5003 sensor on SWSerial
 
 #include <SoftwareSerial.h>
-#ifdef ESP8266
-const uint8_t PMS_RX=2, PMS_TX=0;
-#else
+#include <PMserial.h>  // Arduino library for PM sensors with serial interface
+#if !defined(PMS_RX) && !defined(PMS_TX)
 const uint8_t PMS_RX=10, PMS_TX=11;
 #endif
-#include <PMserial.h>  // Arduino library for PM sensors with serial interface
 SerialPM pms(PMS5003, PMS_RX, PMS_TX);  // PMSx003, RX, TX
 
 void setup() {
@@ -25,7 +23,7 @@ void loop() {
   if(pms){  // sucessfull read
 #ifdef ESP8266
     // print formatted results
-    Serial.printf("PM1.0 %d, PM2.5 %d, PM10 %d [ug/m3]\n",
+    Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]\n",
       pms.pm01,pms.pm25,pms.pm10);
 #else
     // print the results
@@ -35,6 +33,8 @@ void loop() {
 #endif
   } else { // something went wrong
     switch (pms.status) {
+    case pms.OK: // should never come here
+      break;     // included to compile without warnings
     case pms.ERROR_TIMEOUT:
       Serial.println(F(PMS_ERROR_TIMEOUT));
       break;
@@ -57,7 +57,7 @@ void loop() {
       Serial.println(F(PMS_ERROR_MSG_CKSUM));
       break;
     case pms.ERROR_PMS_TYPE:
-      Serial.println(F(PMS_ERROR_MSG_CKSUM));
+      Serial.println(F(PMS_ERROR_PMS_TYPE));
       break;
     }
   }
