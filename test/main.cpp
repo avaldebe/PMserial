@@ -83,7 +83,7 @@ void statusPMS(){
     Serial.println(F(PMS_ERROR_MSG_CKSUM));
     break;
   case pms.ERROR_PMS_TYPE:
-    Serial.println(F(PMS_ERROR_MSG_CKSUM));
+    Serial.println(F(PMS_ERROR_PMS_TYPE));
     break;
   default:
     Serial.println(F("Unknown error"));

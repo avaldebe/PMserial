@@ -7,7 +7,7 @@ Arduino library for PM sensors with serial interface
 [plantower][]      | Tested Works | Doesn't Work | Not Tested  | Datasheet | Notes
 ------------------ | :----------: | :----------: | :---------: | --------- | -----
 PMS1003 (aka G1)   |   |   | X | [en][g1aqmd],  [cn][g1lcsc] |
-PMS3003 (aka G3)   |   |   | X | [en][g3aqmon], [cn][g3lcsc] |
+PMS3003 (aka G3)   | X |   |   | [en][g3aqmon], [cn][g3lcsc] |
 PMS5003 (aka G5)   | X |   |   | [en][g5aqmd],  [cn][g5lcsc] |
 PMS7003 (aka G7)   |   |   | X |                [cn][g7lcsc] |
 PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] |
@@ -40,6 +40,6 @@ ESP8266            | X |   |   | [HardwareSerial][] [SoftwareSerial][]  [OLED 64
 ESP32              |   |   | X | [HardwareSerial][]                     [OLED 64x48][] | Serial1 not supported
 
 
-[SoftwareSerial]:  examples/SoftwareSerial/README.md
-[HardwareSerial1]: examples/HardwareSerial/README.md
-[OLED 64x48]:      examples/OLED_64x48/README.md
+[SoftwareSerial]: examples/SoftwareSerial/README.md
+[HardwareSerial]: examples/HardwareSerial/README.md
+[OLED 64x48]:     examples/OLED_64x48/README.md
