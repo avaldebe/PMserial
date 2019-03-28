@@ -1,12 +1,15 @@
 // HardwareSerial1.ino: Read PMS5003 sensor on Serial1
 
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
-#ifdef ESP32
-  #define MSG "PMS5003 on HardwareSerial2"
-  SerialPM pms(PMS5003, Serial2);         // PMSx003, UART
+#if   defined(USE_HWSERIAL2)
+  #define MSG "PMSx003 on HardwareSerial2"
+  SerialPM pms(PMSx003, Serial2);         // PMSx003, UART
+#elif defined(USE_HWSERIAL1)
+  #define MSG "PMSx003 on HardwareSerial1"
+  SerialPM pms(PMSx003, Serial1);         // PMSx003, UART
 #else
-  #define MSG "PMS5003 on HardwareSerial1"
-  SerialPM pms(PMS5003, Serial1);         // PMSx003, UART
+  #define MSG "PMSx003 on HardwareSerial"
+  SerialPM pms(PMSx003, Serial);          // PMSx003, UART
 #endif
 
 void setup() {
@@ -21,9 +24,9 @@ void loop() {
   // read the PM sensor
   pms.read();
   if(pms){  // sucessfull read
-#ifdef ESP32
+#if  defined(ESP8266) || defined(ESP32)
     // print formatted results
-    Serial.printf("PM1.0 %d, PM2.5 %d, PM10 %d [ug/m3]\n",
+    Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]\n",
       pms.pm01,pms.pm25,pms.pm10);
 #else
     // print the results
@@ -33,6 +36,8 @@ void loop() {
 #endif
   } else { // something went wrong
     switch (pms.status) {
+    case pms.OK: // should never come here
+      break;     // included to compile without warnings
     case pms.ERROR_TIMEOUT:
       Serial.println(F(PMS_ERROR_TIMEOUT));
       break;
@@ -55,7 +60,7 @@ void loop() {
       Serial.println(F(PMS_ERROR_MSG_CKSUM));
       break;
     case pms.ERROR_PMS_TYPE:
-      Serial.println(F(PMS_ERROR_MSG_CKSUM));
+      Serial.println(F(PMS_ERROR_PMS_TYPE));
       break;
     }
   }

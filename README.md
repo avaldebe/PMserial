@@ -27,19 +27,19 @@ PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] |
 
 MCU                | Tested Works | Doesn't Work | Not Tested  | Examples | Notes
 ------------------ | :----------: | :----------: | :---------: | -------- | -----
-Atmega328  @  8MHz | X |   |   | [SoftwareSerial][]                 |
-Atmega328  @ 16MHz |   |   | X | [SoftwareSerial][]                 |
-ATmega168  @  8MHz |   |   | X | [SoftwareSerial][]                 |
-Atmega168  @ 16MHz |   |   | X |                                    |
-Atmega32u4 @  8MHz |   |   | X |                                    |
-Atmega32u4 @ 16MHz |   |   | X | [HardwareSerial1][]                |
-Atmega2560 @ 16MHz | X |   |   | [HardwareSerial1][]                |
-STM32f103c8        |   |   | X |                                    |
-STM32f103cb        |   |   | X | [HardwareSerial1][]                |
-ESP8266            | X |   |   | [SoftwareSerial][]  [OLED 64x48][] |
-ESP32              |   |   | X | [HardwareSerial1][] [OLED 64x48][] | Serial1 not supported
+Atmega328  @  8MHz | X |   |   |                    [SoftwareSerial][]                 |
+Atmega328  @ 16MHz |   |   | X |                    [SoftwareSerial][]                 |
+ATmega168  @  8MHz |   |   | X |                    [SoftwareSerial][]                 |
+Atmega168  @ 16MHz |   |   | X |                                                       |
+Atmega32u4 @  8MHz |   |   | X |                                                       |
+Atmega32u4 @ 16MHz |   |   | X | [HardwareSerial][]                                    |
+Atmega2560 @ 16MHz | X |   |   | [HardwareSerial][]                                    |
+STM32f103c8        |   |   | X |                                                       |
+STM32f103cb        |   |   | X | [HardwareSerial][]                                    |
+ESP8266            | X |   |   | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] |
+ESP32              |   |   | X | [HardwareSerial][]                     [OLED 64x48][] | Serial1 not supported
 
 
 [SoftwareSerial]:  examples/SoftwareSerial/README.md
-[HardwareSerial1]: examples/HardwareSerial1/README.md
+[HardwareSerial1]: examples/HardwareSerial/README.md
 [OLED 64x48]:      examples/OLED_64x48/README.md
