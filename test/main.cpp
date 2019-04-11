@@ -9,18 +9,30 @@
 #include <Arduino.h>
 
 #include <PMserial.h>
-#if   defined(ESP32)
-  #define MSG "PMS sensor on HardwareSerial2"
-  SerialPM pms(PMSx003, Serial2); // PMSx003, UART
+#if   defined(USE_HWSERIAL2)
+  #define MSG "PMSx003 on HardwareSerial2"
+  SerialPM pms(PMSx003, Serial2);         // PMSx003, UART
+#elif defined(USE_HWSERIAL1)
+  #define MSG "PMSx003 on HardwareSerial1"
+  SerialPM pms(PMSx003, Serial1);         // PMSx003, UART
+#elif defined(USE_HWSERIAL)
+  #define MSG "PMSx003 on HardwareSerial"
+  SerialPM pms(PMSx003, Serial);          // PMSx003, UART
+#elif defined(PMS_RX) && defined(PMS_TX)
+  #define MSG "PMSx003 on SoftwareSerial"
+  SerialPM pms(PMSx003, PMS_RX, PMS_TX);  // PMSx003, RX, TX
+#elif defined(ESP32)
+  #define MSG "PMSx003 on HardwareSerial2"
+  SerialPM pms(PMSx003, Serial2);         // PMSx003, UART
 #elif defined(HAS_HW_SERIAL1)
-  #define MSG "PMS sensor on HardwareSerial1"
-  SerialPM pms(PMSx003, Serial1); // PMSx003, UART
+  #define MSG "PMSx003 on HardwareSerial1"
+  SerialPM pms(PMSx003, Serial1);         // PMSx003, UART
 #elif defined(HAS_SW_SERIAL)
-  #define MSG "PMS sensor on SoftwareSerial"
-  SerialPM pms(PMSx003, 10, 11);  // PMSx003, RX, TX
+  #define MSG "PMSx003 on SoftwareSerial"
+  SerialPM pms(PMSx003, 10, 11);          // PMSx003, RX, TX
 #else
-  #define MSG "PMS sensor on HardwareSerial"
-  SerialPM pms(PMSx003, Serial);  // PMSx003, UART
+  #define MSG "PMSx003 on HardwareSerial"
+  SerialPM pms(PMSx003, Serial);          // PMSx003, UART
 #endif
 
 void setup() {
@@ -89,6 +101,13 @@ void statusPMS(){
     Serial.println(F("Unknown error"));
     break;
   }
+  static uint16_t readings = 0, errors = 0;
+  readings++; if(!pms) errors++;
+  #if defined(ESP8266) || defined(ESP8266)
+    Serial.printf("errors %d/%d\n", errors, readings);
+  #else
+    Serial.print(F("errors "));Serial.print(errors);Serial.print(F("/"));Serial.println(readings);
+  #endif
 }
 
 void loop() {
