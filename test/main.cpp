@@ -69,6 +69,13 @@ void printPMS(){
 }
 
 void statusPMS(){
+  static uint16_t readings = 0, errors = 0;
+  readings++; if(!pms) errors++;
+  #if defined(ESP8266) || defined(ESP8266)
+    Serial.printf("  Errors %d/%d\n", errors, readings);
+  #else
+    Serial.print(F("  Errors "));Serial.print(errors);Serial.print(F("/"));Serial.println(readings);
+  #endif
   switch (pms.status) {
   case pms.OK:
     printPMS();
@@ -101,13 +108,6 @@ void statusPMS(){
     Serial.println(F("Unknown error"));
     break;
   }
-  static uint16_t readings = 0, errors = 0;
-  readings++; if(!pms) errors++;
-  #if defined(ESP8266) || defined(ESP8266)
-    Serial.printf("errors %d/%d\n", errors, readings);
-  #else
-    Serial.print(F("errors "));Serial.print(errors);Serial.print(F("/"));Serial.println(readings);
-  #endif
 }
 
 void loop() {

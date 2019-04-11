@@ -99,14 +99,16 @@ public:
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;      // sensor type/message protocol
-  static const uint8_t BUFFER_LEN = 32;
-  uint8_t buffer[BUFFER_LEN];
-  bool hwSerial;
+  bool hwSerial;// Is uart hardware serial? (or softtware serial)
 
   // utility functions
   STATUS trigRead();
   bool checkBuffer(size_t bufferLen);
   void decodeBuffer(bool tsi_mode, bool truncated_num);
+
+  // message buffer
+  static const uint8_t BUFFER_LEN = 32;
+  uint8_t  buffer[BUFFER_LEN];
   inline uint16_t buff2word(uint8_t n){ return (buffer[n]<<8)|buffer[n+1]; }
 };
 
