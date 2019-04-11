@@ -73,21 +73,23 @@ void SerialPM::init(){
     static_cast<SoftwareSerial*>(uart)->begin(9600);
 #endif
   }
-  uart->write(cfg, msgLen);  // set passive mode
+  uart->write(cfg, msgLen); // set passive mode
   uart->flush();
 }
 
 SerialPM::STATUS SerialPM::trigRead(){
   while (uart->available()) {
-    uart->read();           // empty the RX buffer
+    uart->readBytes(buffer, BUFFER_LEN);  // empty the RX buffer
   }
   uart->write(trg, msgLen); // passive mode read
   uart->flush();
 
   uint16_t start_ms = millis();
   do {                      // ~650ms to complete a measurements
-    delay(10);              // wait up to 800ms
-  } while (!uart->available() && millis()-start_ms<800);
+    delay(10);              // wait up to 1s
+  } while (!uart->available() && millis()-start_ms<1000);
+  uart->write(cfg, msgLen); // set passive mode
+  uart->flush();
 
   // we should an asnwer/message after 650ms
   if (!uart->available())
