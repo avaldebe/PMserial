@@ -164,8 +164,8 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
 
   if (!truncated_num)
     return;
-  for (bin=5; bin>0; bin--) {
-    nc[bin] -= nc[bin-1];   // de-accumulate number concentrations
+  for (bin=0; bin<5; bin++) {
+    nc[bin] -= nc[bin+1];   // de-accumulate number concentrations
   }
 }
 
