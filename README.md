@@ -6,11 +6,11 @@ Arduino library for PM sensors with serial interface
 
 [plantower][]      | Tested Works | Doesn't Work | Not Tested  | Datasheet | Notes
 ------------------ | :----------: | :----------: | :---------: | --------- | -----
-PMS1003 (aka G1)   |   |   | X | [en][g1aqmd],  [cn][g1lcsc] |
-PMS3003 (aka G3)   | X |   |   | [en][g3aqmon], [cn][g3lcsc] |
-PMS5003 (aka G5)   | X |   |   | [en][g5aqmd],  [cn][g5lcsc] |
-PMS7003 (aka G7)   | X |   |   |                [cn][g7lcsc] |
-PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] |
+PMS1003 (aka G1)   |   |   | X | [en][g1aqmd],  [cn][g1lcsc] | |
+PMS3003 (aka G3)   | X |   |   | [en][g3aqmon], [cn][g3lcsc] | No passive mode read |
+PMS5003 (aka G5)   | X |   |   | [en][g5aqmd],  [cn][g5lcsc] | |
+PMS7003 (aka G7)   | X |   |   |                [cn][g7lcsc] | |
+PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] | |
 
 [plantower]: http://www.plantower.com/
 [g1aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2

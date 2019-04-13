@@ -57,11 +57,11 @@ const uint8_t
 
 const uint8_t
   msgLen = 7,
-  cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
-  trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
 //act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
 //slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
 //wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
+  cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
+  trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
 
 void SerialPM::init(){
   if(hwSerial) {
@@ -75,21 +75,19 @@ void SerialPM::init(){
   }
   uart->write(cfg, msgLen); // set passive mode
   uart->flush();
+  while (uart->available()) {
+    uart->read();           // empty the RX buffer
+}
 }
 
 SerialPM::STATUS SerialPM::trigRead(){
   while (uart->available()) {
-    uart->readBytes(buffer, BUFFER_LEN);  // empty the RX buffer
+    uart->read();           // empty the RX buffer
   }
   uart->write(trg, msgLen); // passive mode read
   uart->flush();
 
-  uint16_t start_ms = millis();
-  do {                      // ~650ms to complete a measurements
-    delay(10);              // wait up to 1s
-  } while (!uart->available() && millis()-start_ms<1000);
-  uart->write(cfg, msgLen); // set passive mode
-  uart->flush();
+  uint32_t start_ms = millis();   // start waiting time
 
   // we should an asnwer/message after 650ms
   if (!uart->available())
