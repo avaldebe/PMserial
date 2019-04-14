@@ -8,6 +8,7 @@
 */
 #include <Arduino.h>
 
+#define PMS_DEBUG
 #include <PMserial.h>
 #if   defined(USE_HWSERIAL2)
   #define MSG "PMSx003 on HardwareSerial2"
@@ -69,12 +70,14 @@ void printPMS(){
 }
 
 void statusPMS(){
+  pms.print_buffer(Serial, " %04X");
   static uint16_t readings = 0, errors = 0;
   readings++; if(!pms) errors++;
   #if defined(ESP8266) || defined(ESP8266)
-    Serial.printf("  Errors %d/%d\n", errors, readings);
+    Serial.printf("\nErrors %d/%d, waited %d ms\n", errors, readings, pms.waited_ms());
   #else
-    Serial.print(F("  Errors "));Serial.print(errors);Serial.print(F("/"));Serial.println(readings);
+    Serial.print(F("\nErrors "));Serial.print(errors);Serial.print(F("/"));Serial.print(readings);
+    Serial.print(F(", waited "));Serial.println(pms.waited_ms());
   #endif
   switch (pms.status) {
   case pms.OK:

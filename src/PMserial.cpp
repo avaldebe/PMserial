@@ -88,6 +88,10 @@ SerialPM::STATUS SerialPM::trigRead(){
   uart->flush();
 
   uint32_t start_ms = millis();   // start waiting time
+  do {                            // ~650ms to complete a measurements
+    delay(10);                    // wait up to max_wait_ms
+    wait_ms = millis()-start_ms;  // time waited so far
+  } while (!uart->available() && wait_ms<max_wait_ms);
 
   // we should an asnwer/message after 650ms
   if (!uart->available())

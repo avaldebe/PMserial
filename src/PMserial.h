@@ -95,6 +95,18 @@ public:
   operator bool() { return status == OK; }
   inline bool has_particulate_matter() { return status == OK; }
   inline bool has_number_concentration() {return (status == OK) && (pms == PLANTOWER_32B); }
+#ifdef PMS_DEBUG
+#ifdef HAS_HW_SERIAL
+  inline void print_buffer(Stream &term, const char* fmt){
+    char tmp[8];
+    for (uint8_t n=0; n<BUFFER_LEN; n+=2) { 
+      sprintf(tmp, fmt, buff2word(n)); 
+      term.print(tmp);
+    }
+  }
+#endif
+  inline uint16_t waited_ms() { return wait_ms; } // debug timing
+#endif
 
 protected:
   Stream *uart; // hardware/software serial
@@ -105,6 +117,10 @@ protected:
   STATUS trigRead();
   bool checkBuffer(size_t bufferLen);
   void decodeBuffer(bool tsi_mode, bool truncated_num);
+
+  // message timing
+  static const uint16_t max_wait_ms = 1000;
+  uint16_t wait_ms; // time spent waiting for new sample
 
   // message buffer
   static const uint8_t BUFFER_LEN = 32;
