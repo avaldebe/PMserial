@@ -53,7 +53,7 @@ public:
     struct {
       // pmX [ug/m3]: PM1.0, PM2.5 & PM10
       uint16_t pm01, pm25, pm10;
-      // nXpY [#/100cc]: number concentrations under X.Y nm
+      // nXpY [#/100cc]: number concentrations under X.Y um
       uint16_t n0p3, n0p5, n1p0, n2p5, n5p0, n10p0;
     };
   };
@@ -71,13 +71,13 @@ public:
   }
 #endif
   void init();
-  #define PMS_ERROR_TIMEOUT     "Timeout error"
+  #define PMS_ERROR_TIMEOUT     "Sensor read timeout"
   #define PMS_ERROR_PMS_TYPE    "Wrong PMSx003 sensor type"
   #define PMS_ERROR_MSG_UNKNOWN "Unknown message protocol"
   #define PMS_ERROR_MSG_HEADER  "Incomplete message header"
-  #define PMS_ERROR_MSG_BODY    "Incomplete message boddy"
+  #define PMS_ERROR_MSG_BODY    "Incomplete message body"
   #define PMS_ERROR_MSG_START   "Wrong message start"
-  #define PMS_ERROR_MSG_LENGHT  "Message too long"
+  #define PMS_ERROR_MSG_LENGTH  "Message too long"
   #define PMS_ERROR_MSG_CKSUM   "Wrong message checksum"
   enum STATUS {
     OK,
@@ -87,7 +87,7 @@ public:
     ERROR_MSG_HEADER,
     ERROR_MSG_BODY,
     ERROR_MSG_START,
-    ERROR_MSG_LENGHT,
+    ERROR_MSG_LENGTH,
     ERROR_MSG_CKSUM
   };
   STATUS status;
@@ -111,7 +111,7 @@ public:
 protected:
   Stream *uart; // hardware/software serial
   PMS pms;      // sensor type/message protocol
-  bool hwSerial;// Is uart hardware serial? (or softtware serial)
+  bool hwSerial;// Is uart hardware serial? (or software serial)
 
   // utility functions
   STATUS trigRead();

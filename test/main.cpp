@@ -98,8 +98,8 @@ void statusPMS(){
   case pms.ERROR_MSG_START:
     Serial.println(F(PMS_ERROR_MSG_START));
     break;
-  case pms.ERROR_MSG_LENGHT:
-    Serial.println(F(PMS_ERROR_MSG_LENGHT));
+  case pms.ERROR_MSG_LENGTH:
+    Serial.println(F(PMS_ERROR_MSG_LENGTH));
     break;
   case pms.ERROR_MSG_CKSUM:
     Serial.println(F(PMS_ERROR_MSG_CKSUM));

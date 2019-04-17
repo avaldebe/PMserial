@@ -93,12 +93,12 @@ SerialPM::STATUS SerialPM::trigRead(){
     wait_ms = millis()-start_ms;  // time waited so far
   } while (!uart->available() && wait_ms<max_wait_ms);
 
-  // we should an asnwer/message after 650ms
+  // we should an answer/message after 650ms
   if (!uart->available())
     return ERROR_TIMEOUT;
 
   // read message header
-  const size_t headLen = 4;             // message header lenght
+  const size_t headLen = 4;             // message header length
   if (uart->readBytes(&buffer[0], headLen) != headLen)
     return ERROR_MSG_HEADER;
 
@@ -106,9 +106,9 @@ SerialPM::STATUS SerialPM::trigRead(){
   if (buff2word(0)!=0x424D)
     return ERROR_MSG_START;
 
-  // check message lenght against stated sensor type
-  size_t bodyLen = buff2word(2);        // message body lenght
-  size_t messageLen = headLen+bodyLen;  // full message lenght
+  // check message length against stated sensor type
+  size_t bodyLen = buff2word(2);        // message body length
+  size_t messageLen = headLen+bodyLen;  // full message length
   PMS sensor;
   switch (messageLen) {
   case 24:
@@ -129,7 +129,7 @@ SerialPM::STATUS SerialPM::trigRead(){
 
   // full message should fit in the buffer
   if (messageLen>BUFFER_LEN)
-    return ERROR_MSG_LENGHT;
+    return ERROR_MSG_LENGTH;
   
   // read message body
   if (uart->readBytes(&buffer[headLen], bodyLen) != bodyLen)

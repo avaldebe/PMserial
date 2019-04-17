@@ -20,7 +20,7 @@ void setup() {
 void loop() {
   // read the PM sensor
   pms.read();
-  if(pms){  // sucessfull read
+  if(pms){  // successfull read
 #ifdef ESP8266
     // print formatted results
     Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]\n",
@@ -50,8 +50,8 @@ void loop() {
     case pms.ERROR_MSG_START:
       Serial.println(F(PMS_ERROR_MSG_START));
       break;
-    case pms.ERROR_MSG_LENGHT:
-      Serial.println(F(PMS_ERROR_MSG_LENGHT));
+    case pms.ERROR_MSG_LENGTH:
+      Serial.println(F(PMS_ERROR_MSG_LENGTH));
       break;
     case pms.ERROR_MSG_CKSUM:
       Serial.println(F(PMS_ERROR_MSG_CKSUM));

@@ -46,7 +46,7 @@ void plotPM(uint16_t *pm, const uint16_t msec){
   static uint8_t buffer[nbar*nbin], pos=0, scale=0;
   uint8_t n, bin, bar;
 
-  // rescale buffer, if necesary
+  // rescale buffer, if necessary
   uint8_t rescale=0;
   while ((pm[nbin-1]>>scale)>HEIGHT) {
     scale++;
@@ -66,7 +66,7 @@ void plotPM(uint16_t *pm, const uint16_t msec){
   for (bin=0, n=pos*nbin; bin<nbin; bin++, n++){
      buffer[n] = pm[bin]>>scale;
   }
-  pos++;     // next possition on the buffer, first to plot
+  pos++;     // next position on the buffer, first to plot
 
   // plot buffer
   display.clear();
@@ -87,7 +87,7 @@ void plotNC(uint16_t *nc, const uint16_t msec){
   const uint8_t nbin=6, barWidth=WIDTH/nbin;
   uint8_t bin, scale, barHeight;
 
-  // rescale input, if necesary
+  // rescale input, if necessary
   scale=0;
   for (bin=0; bin<nbin; bin++){
     while ((nc[bin]>>scale)>HEIGHT) {
@@ -160,7 +160,7 @@ void showNC(uint16_t *nc, const uint16_t msec){
 void loop() {
   // read the PM sensor
   pms.read();
-  if(pms){  // sucessfull read
+  if(pms){  // successfull read
     // print values
     Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]; ",
       pms.pm01,pms.pm25,pms.pm10);
@@ -170,7 +170,7 @@ void loop() {
     // display values
     showPM(pms.pm, 5000); // particulate matter, wait 5 sec
     plotPM(pms.pm, 5000);
-    showNC(pms.nc, 5000); // number concentrarion, wait 5 sec
+    showNC(pms.nc, 5000); // number concentration, wait 5 sec
     plotNC(pms.nc, 5000);
   } else { // something went wrong
     switch (pms.status) {
@@ -191,8 +191,8 @@ void loop() {
     case pms.ERROR_MSG_START:
       Serial.println(F(PMS_ERROR_MSG_START));
       break;
-    case pms.ERROR_MSG_LENGHT:
-      Serial.println(F(PMS_ERROR_MSG_LENGHT));
+    case pms.ERROR_MSG_LENGTH:
+      Serial.println(F(PMS_ERROR_MSG_LENGTH));
       break;
     case pms.ERROR_MSG_CKSUM:
       Serial.println(F(PMS_ERROR_MSG_CKSUM));

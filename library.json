@@ -8,13 +8,13 @@
         "type": "git",
         "url": "https://github.com/avaldebe/PMserial"
       },
-    "version": "1.0.0-rc2",
+    "version": "1.0.0",
     "authors": {
         "name": "Alvaro Valdebenito",
         "url": "https://github.com/avaldebe"
     },
     "frameworks": "arduino",
-    "platforms": "*",
+    "platforms": "atmelavr, ststm32, espressif8266, espressif32",
     "export": {
         "include": [
             "README.md",
