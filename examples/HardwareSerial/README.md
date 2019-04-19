@@ -1,4 +1,4 @@
-# PMSerail: HardwareSerial.ino
+# PMSerial: HardwareSerial.ino
 
 Read PMS5003 sensor on Serial/Serial1/Serial2, depending on the board.
 
@@ -70,9 +70,9 @@ platformio run -e maple_mini -t monitor
 
 - Serial is the only HardwareSerial.
 
-This example useds Serial for communicaring with the sensor
+This example used Serial for communicating with the sensor
 and printing the sensor values.
-Some garbage betweem printouts is to be expected.
+Some garbage between printouts is to be expected.
 
 ```bash
 # compile
@@ -95,13 +95,14 @@ You need provide 5V for the fan to operate properly.
 
 The Serial1 default pins are used by the flash.
 Using them will cause a crash, see espressif/arduino-esp32#148.
-It is possible to define alternative pines by calling 
+It is possible to define alternative pines by calling
+
 ```Arduino
 Serial1.begin(baud_rate, config, <rxPin>, <txPin>)
 ````
-Alas, this option is not supported by PMSerail.
-Therefore, this example uses Serial2 instead.
 
+Alas, this option is not supported by PMSerial.
+Therefore, this example uses Serial2 instead.
 
 ```bash
 # compile

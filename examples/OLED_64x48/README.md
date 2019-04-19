@@ -1,4 +1,4 @@
-# PMSerail: OLED_64x48.ino
+# PMSerial: OLED_64x48.ino
 
 Read PMS5003 sensor and display results on a 0.66 inch OLED.
 

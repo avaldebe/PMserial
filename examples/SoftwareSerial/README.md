@@ -1,4 +1,4 @@
-# PMSerail: HardwareSerial1.ino
+# PMSerial: HardwareSerial1.ino
 
 Read PMS5003 sensor on SWSerial
 
