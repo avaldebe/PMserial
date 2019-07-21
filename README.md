@@ -21,7 +21,7 @@ PMSA003 (aka G10)  |   |   | X |                [cn][gAlcsc] |
 [g3lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS3003_C87024.pdf
 [g5lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS5003_C91431.pdf
 [g7lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS7003_C84815.pdf
-[gAlcsc]:    https://datasheet.lcsc.com/szlcsc/PMSA003-C_C89095.pdf
+[gAlcsc]:    https://datasheet.lcsc.com/szlcsc/PMSA003-A_C132744.pdf
 
 ## Compatibility
 
