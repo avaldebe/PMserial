@@ -1,7 +1,10 @@
+.pio
 .pioenvs
 .piolibdeps
 .clang_complete
 .gcc-flags.json
 *.swp
-.vscode
 *.gch
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
