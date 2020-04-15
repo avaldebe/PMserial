@@ -79,6 +79,7 @@ void SerialPM::init()
   }
   uart->write(cfg, msgLen); // set passive mode
   uart->flush();
+  delay(max_wait_ms * 2);
   while (uart->available())
   {
     uart->read(); // empty the RX buffer
