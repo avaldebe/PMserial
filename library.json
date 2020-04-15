@@ -7,8 +7,8 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/avaldebe/PMserial"
-      },
-    "version": "1.0.0",
+    },
+    "version": "1.0.1",
     "authors": {
         "name": "Alvaro Valdebenito",
         "url": "https://github.com/avaldebe"

@@ -172,3 +172,14 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 [GH3]: https://github.com/avaldebe/PMserial/issues/3
 [GH4]: https://github.com/avaldebe/PMserial/issues/4
+
+## Changelog
+
+- 1.0.1
+  - Fix broken SoftwareSerial for ESP8266, [#6][GH4]
+  - ESP8266 use EspSoftwareSerial@>=6.7.1
+
+- 1.0.0
+  - first complete release
+
+[GH4]: https://github.com/avaldebe/PMserial/issues/6
