@@ -25,8 +25,8 @@ Arduino library for PM sensors with serial interface
 
 ## Compatibility
 
-| MCU                | Tested Works | Doesn't Work | Not Tested | Examples                                              | Notes                                     |
-| ------------------ | :----------: | :----------: | :--------: | ----------------------------------------------------- | ----------------------------------------- |
+| MCU                | Tested Works | Doesn't Work | Not Tested | Examples                                              | Notes                               |
+| ------------------ | :----------: | :----------: | :--------: | ----------------------------------------------------- | ----------------------------------- |
 | Atmega328  @  8MHz |      X       |              |            | [SoftwareSerial][]                                    |
 | Atmega328  @ 16MHz |              |              |     X      | [SoftwareSerial][]                                    |
 | ATmega168  @  8MHz |              |              |     X      | [SoftwareSerial][]                                    |
@@ -36,13 +36,14 @@ Arduino library for PM sensors with serial interface
 | Atmega2560 @ 16MHz |      X       |              |            | [HardwareSerial][]                                    |
 | STM32f103c8        |              |              |     X      |                                                       |
 | STM32f103cb        |              |              |     X      | [HardwareSerial][]                                    |
-| ESP8266            |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | needs [EspSoftwareSerial@>=6.7.1][issue6] |
-| ESP32              |              |              |     X      | [HardwareSerial][]                     [OLED 64x48][] | Serial1 not supported                     |
+| ESP8266            |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | [needs EspSoftwareSerial@>=6.7.1][] |
+| ESP32              |              |              |     X      | [HardwareSerial][]                     [OLED 64x48][] | [Serial1 not supported][]           |
 
 [SoftwareSerial]: examples/SoftwareSerial/README.md
 [HardwareSerial]: examples/HardwareSerial/README.md
 [OLED 64x48]:     examples/OLED_64x48/README.md
-[issue6]: https://github.com/avaldebe/PMserial/issues/6
+[needs EspSoftwareSerial@>=6.7.1]:  https://github.com/avaldebe/PMserial/issues/6
+[Serial1 not supported]:            https://github.com/avaldebe/PMserial/tree/master/examples/HardwareSerial#esp32-esp32minikit
 
 ## Usage
 
@@ -169,5 +170,5 @@ Reopen the issue if needed.
 If you want something a bit more challenging. I would appreciate more example projects.
 See issue [#4][GH4] for inspiration. PRs are welcomed.
 
-[GH3]: https://github.com/avaldebe/PMserial/issues/4
+[GH3]: https://github.com/avaldebe/PMserial/issues/3
 [GH4]: https://github.com/avaldebe/PMserial/issues/4
