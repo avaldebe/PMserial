@@ -10,33 +10,34 @@
 
 #define PMS_DEBUG
 #include <PMserial.h>
-#if   defined(USE_HWSERIAL2)
-  #define MSG "PMSx003 on HardwareSerial2"
-  SerialPM pms(PMSx003, Serial2);         // PMSx003, UART
+#if defined(USE_HWSERIAL2)
+#define MSG "PMSx003 on HardwareSerial2"
+SerialPM pms(PMSx003, Serial2); // PMSx003, UART
 #elif defined(USE_HWSERIAL1)
-  #define MSG "PMSx003 on HardwareSerial1"
-  SerialPM pms(PMSx003, Serial1);         // PMSx003, UART
+#define MSG "PMSx003 on HardwareSerial1"
+SerialPM pms(PMSx003, Serial1); // PMSx003, UART
 #elif defined(USE_HWSERIAL)
-  #define MSG "PMSx003 on HardwareSerial"
-  SerialPM pms(PMSx003, Serial);          // PMSx003, UART
+#define MSG "PMSx003 on HardwareSerial"
+SerialPM pms(PMSx003, Serial); // PMSx003, UART
 #elif defined(PMS_RX) && defined(PMS_TX)
-  #define MSG "PMSx003 on SoftwareSerial"
-  SerialPM pms(PMSx003, PMS_RX, PMS_TX);  // PMSx003, RX, TX
+#define MSG "PMSx003 on SoftwareSerial"
+SerialPM pms(PMSx003, PMS_RX, PMS_TX); // PMSx003, RX, TX
 #elif defined(ESP32)
-  #define MSG "PMSx003 on HardwareSerial2"
-  SerialPM pms(PMSx003, Serial2);         // PMSx003, UART
+#define MSG "PMSx003 on HardwareSerial2"
+SerialPM pms(PMSx003, Serial2); // PMSx003, UART
 #elif defined(HAS_HW_SERIAL1)
-  #define MSG "PMSx003 on HardwareSerial1"
-  SerialPM pms(PMSx003, Serial1);         // PMSx003, UART
+#define MSG "PMSx003 on HardwareSerial1"
+SerialPM pms(PMSx003, Serial1); // PMSx003, UART
 #elif defined(HAS_SW_SERIAL)
-  #define MSG "PMSx003 on SoftwareSerial"
-  SerialPM pms(PMSx003, 10, 11);          // PMSx003, RX, TX
+#define MSG "PMSx003 on SoftwareSerial"
+SerialPM pms(PMSx003, 10, 11); // PMSx003, RX, TX
 #else
-  #define MSG "PMSx003 on HardwareSerial"
-  SerialPM pms(PMSx003, Serial);          // PMSx003, UART
+#define MSG "PMSx003 on HardwareSerial"
+SerialPM pms(PMSx003, Serial); // PMSx003, UART
 #endif
 
-void setup() {
+void setup()
+{
   Serial.begin(9600);
   Serial.println(F("Booted"));
 
@@ -44,42 +45,75 @@ void setup() {
   pms.init();
 }
 
-void printPMS(){
-  if (!pms.has_particulate_matter()) return;
- #if defined(ESP8266) || defined(ESP8266)
+void printPMS()
+{
+  if (!pms.has_particulate_matter())
+    return;
+#if defined(ESP8266) || defined(ESP8266)
   Serial.printf("PM1.0 %2d, PM2.5 %2d, PM10 %2d [ug/m3]\n",
-    pms.pm01,pms.pm25,pms.pm10);
- #else
-  Serial.print(F("PM1.0 "));Serial.print(pms.pm01);Serial.print(F(", "));
-  Serial.print(F("PM2.5 "));Serial.print(pms.pm25);Serial.print(F(", "));
-  Serial.print(F("PM10 ")) ;Serial.print(pms.pm10);Serial.println(F(" [ug/m3]"));
+                pms.pm01, pms.pm25, pms.pm10);
+#else
+  Serial.print(F("PM1.0 "));
+  Serial.print(pms.pm01);
+  Serial.print(F(", "));
+  Serial.print(F("PM2.5 "));
+  Serial.print(pms.pm25);
+  Serial.print(F(", "));
+  Serial.print(F("PM10 "));
+  Serial.print(pms.pm10);
+  Serial.println(F(" [ug/m3]"));
 #endif
 
-  if (!pms.has_number_concentration()) return;
- #if defined(ESP8266) || defined(ESP8266)
+  if (!pms.has_number_concentration())
+    return;
+#if defined(ESP8266) || defined(ESP8266)
   Serial.printf("N0.3 %4d, N0.5 %3d, N1.0 %2d, N2.5 %2d, N5.0 %2d, N10 %2d [#/100cc]\n",
-    pms.n0p3,pms.n0p5,pms.n1p0,pms.n2p5,pms.n5p0,pms.n10p0);
- #else
-  Serial.print(F("N0.3 "));Serial.print(pms.n0p3);Serial.print(F(", "));
-  Serial.print(F("N0.5 "));Serial.print(pms.n0p5);Serial.print(F(", "));
-  Serial.print(F("N1.0 "));Serial.print(pms.n1p0);Serial.print(F(", "));
-  Serial.print(F("N2.5 "));Serial.print(pms.n2p5);Serial.print(F(", "));
-  Serial.print(F("N5.0 "));Serial.print(pms.n5p0);Serial.print(F(", "));
-  Serial.print(F("N10 "));Serial.print(pms.n10p0);Serial.println(F(" [#/100cc]"));
+                pms.n0p3, pms.n0p5, pms.n1p0, pms.n2p5, pms.n5p0, pms.n10p0);
+#else
+  Serial.print(F("N0.3 "));
+  Serial.print(pms.n0p3);
+  Serial.print(F(", "));
+  Serial.print(F("N0.5 "));
+  Serial.print(pms.n0p5);
+  Serial.print(F(", "));
+  Serial.print(F("N1.0 "));
+  Serial.print(pms.n1p0);
+  Serial.print(F(", "));
+  Serial.print(F("N2.5 "));
+  Serial.print(pms.n2p5);
+  Serial.print(F(", "));
+  Serial.print(F("N5.0 "));
+  Serial.print(pms.n5p0);
+  Serial.print(F(", "));
+  Serial.print(F("N10 "));
+  Serial.print(pms.n10p0);
+  Serial.println(F(" [#/100cc]"));
 #endif
 }
 
-void statusPMS(){
+void statusPMS()
+{
   pms.print_buffer(Serial, " %04X");
   static uint16_t readings = 0, errors = 0;
-  readings++; if(!pms) errors++;
-  #if defined(ESP8266) || defined(ESP8266)
-    Serial.printf("\nErrors %d/%d, waited %d ms\n", errors, readings, pms.waited_ms());
-  #else
-    Serial.print(F("\nErrors "));Serial.print(errors);Serial.print(F("/"));Serial.print(readings);
-    Serial.print(F(", waited "));Serial.println(pms.waited_ms());
-  #endif
-  switch (pms.status) {
+  readings++;
+  if (!pms)
+    errors++;
+#if defined(ESP8266) || defined(ESP8266)
+  Serial.printf("\nErrors %d/%d, %d bytes read, %d ms waited\n", errors, readings, pms.bytes_read(), pms.waited_ms());
+#else
+  Serial.print(F("\nErrors "));
+  Serial.print(errors);
+  Serial.print(F("/"));
+  Serial.print(readings);
+  Serial.print(F(", "));
+  Serial.println(pms.bytes_read());
+  Serial.print(F(" bytes read"));
+  Serial.print(F(", "));
+  Serial.println(pms.waited_ms());
+  Serial.println(F(" ms waited"));
+#endif
+  switch (pms.status)
+  {
   case pms.OK:
     printPMS();
     break;
@@ -113,7 +147,8 @@ void statusPMS(){
   }
 }
 
-void loop() {
+void loop()
+{
   pms.read();   // read the PM sensor
   statusPMS();  // print result/error
   delay(10000); // wait for 10 seconds

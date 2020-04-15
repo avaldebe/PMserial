@@ -51,88 +51,112 @@ DATA(MSB,LSB): Message body (28 bytes), 14 pairs of bytes (MSB,LSB)
 */
 
 const uint8_t
-  TSI_START =  4,             // PM [ug/m3] (TSI standard)
-  ATM_START = 10,             // PM [ug/m3] (std. atmosphere)
-  NUM_START = 16;             // num. particles in 100 cm3 of air
+    TSI_START = 4,  // PM [ug/m3] (TSI standard)
+    ATM_START = 10, // PM [ug/m3] (std. atmosphere)
+    NUM_START = 16; // num. particles in 100 cm3 of air
 
 const uint8_t
-  msgLen = 7,
-//act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
-//slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
-//wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
-  cfg[msgLen] = {0x42,0x4D,0xE1,0x00,0x00,0x01,0x70}, // set passive mode
-  trg[msgLen] = {0x42,0x4D,0xE2,0x00,0x00,0x01,0x71}; // passive mode read
+    msgLen = 7,
+    //act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
+    //slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
+    //wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
+    cfg[msgLen] = {0x42, 0x4D, 0xE1, 0x00, 0x00, 0x01, 0x70}, // set passive mode
+    trg[msgLen] = {0x42, 0x4D, 0xE2, 0x00, 0x00, 0x01, 0x71}; // passive mode read
 
-void SerialPM::init(){
-  if(hwSerial) {
+void SerialPM::init()
+{
+  if (hwSerial)
+  {
 #ifdef HAS_HW_SERIAL
-    static_cast<HardwareSerial*>(uart)->begin(9600,SERIAL_8N1);
+    static_cast<HardwareSerial *>(uart)->begin(9600, SERIAL_8N1);
 #endif
-  } else {
+  }
+  else
+  {
 #ifdef HAS_SW_SERIAL
-    static_cast<SoftwareSerial*>(uart)->begin(9600);
+    static_cast<SoftwareSerial *>(uart)->begin(9600);
 #endif
   }
   uart->write(cfg, msgLen); // set passive mode
   uart->flush();
-  while (uart->available()) {
-    uart->read();           // empty the RX buffer
-}
+  delay(max_wait_ms * 2);
+  while (uart->available())
+  {
+    uart->read(); // empty the RX buffer
+  }
 }
 
-SerialPM::STATUS SerialPM::trigRead(){
-  while (uart->available()) {
-    uart->read();           // empty the RX buffer
+SerialPM::STATUS SerialPM::trigRead()
+{
+  while (uart->available())
+  {
+    uart->read(); // empty the RX buffer
   }
   uart->write(trg, msgLen); // passive mode read
   uart->flush();
 
-  uint32_t start_ms = millis();   // start waiting time
-  do {                            // ~650ms to complete a measurements
-    delay(10);                    // wait up to max_wait_ms
-    wait_ms = millis()-start_ms;  // time waited so far
-  } while (!uart->available() && wait_ms<max_wait_ms);
+  // wait for the mesage header
+  const size_t headLen = 4;     // message header length
+  uint32_t start_ms = millis(); // start waiting time
+  do
+  {                                // ~650ms to complete a measurements
+    delay(10);                     // wait up to max_wait_ms
+    wait_ms = millis() - start_ms; // time waited so far
+  } while (!uart->available() < headLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
     return ERROR_TIMEOUT;
 
   // read message header
-  const size_t headLen = 4;             // message header length
-  if (uart->readBytes(&buffer[0], headLen) != headLen)
+  nbytes = uart->readBytes(&buffer[0], headLen);
+  if (nbytes != headLen)
     return ERROR_MSG_HEADER;
 
   // message header starts with 'BM'
-  if (buff2word(0)!=0x424D)
+  if (buff2word(0) != 0x424D)
     return ERROR_MSG_START;
 
   // check message length against stated sensor type
-  size_t bodyLen = buff2word(2);        // message body length
-  size_t messageLen = headLen+bodyLen;  // full message length
+  size_t bodyLen = buff2word(2);         // message body length
+  size_t messageLen = headLen + bodyLen; // full message length
   PMS sensor;
-  switch (messageLen) {
+  switch (messageLen)
+  {
   case 24:
-    sensor=PLANTOWER_24B;
+    sensor = PLANTOWER_24B;
     break;
   case 32:
-    sensor=PLANTOWER_32B;
+    sensor = PLANTOWER_32B;
     break;
   default:
     return ERROR_MSG_UNKNOWN;
   }
   // self discovery
-  if (pms==PLANTOWER_AUTO)
-    pms=sensor;
+  if (pms == PLANTOWER_AUTO)
+    pms = sensor;
   // check sensor type
-  if (pms!=sensor)
+  if (pms != sensor)
     return ERROR_PMS_TYPE;
 
   // full message should fit in the buffer
-  if (messageLen>BUFFER_LEN)
+  if (messageLen > BUFFER_LEN)
     return ERROR_MSG_LENGTH;
-  
+
+  // wait for the message body
+  do
+  {                                // ~650ms to complete a measurements
+    delay(10);                     // wait up to max_wait_ms
+    wait_ms = millis() - start_ms; // time waited so far
+  } while (!uart->available() < bodyLen && wait_ms < max_wait_ms);
+
+  // we should an answer/message after 650ms
+  if (!uart->available())
+    return ERROR_TIMEOUT;
+
   // read message body
-  if (uart->readBytes(&buffer[headLen], bodyLen) != bodyLen)
+  nbytes += uart->readBytes(&buffer[headLen], bodyLen);
+  if (nbytes != messageLen)
     return ERROR_MSG_BODY;
 
   if (!checkBuffer(messageLen))
@@ -141,38 +165,45 @@ SerialPM::STATUS SerialPM::trigRead(){
   return OK;
 }
 
-bool SerialPM::checkBuffer(size_t bufferLen){
-  uint16_t cksum=buff2word(bufferLen-2);
-  for (uint8_t n=0; n<bufferLen-2; n++){
-    cksum-=buffer[n];
+bool SerialPM::checkBuffer(size_t bufferLen)
+{
+  uint16_t cksum = buff2word(bufferLen - 2);
+  for (uint8_t n = 0; n < bufferLen - 2; n++)
+  {
+    cksum -= buffer[n];
   }
 
-  return (cksum==0);
+  return (cksum == 0);
 }
 
-void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num){
+void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num)
+{
   uint8_t bin, n;
   if (!has_particulate_matter())
     return;
-  for (bin=0, n=tsi_mode?TSI_START:ATM_START; bin<3; bin++, n+=2) {
+  for (bin = 0, n = tsi_mode ? TSI_START : ATM_START; bin < 3; bin++, n += 2)
+  {
     pm[bin] = buff2word(n);
   }
 
   if (!has_number_concentration())
     return;
-  for (bin=0, n=NUM_START; bin<6; bin++, n+=2) {
+  for (bin = 0, n = NUM_START; bin < 6; bin++, n += 2)
+  {
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
   }
 
   if (!truncated_num)
     return;
-  for (bin=0; bin<5; bin++) {
-    nc[bin] -= nc[bin+1];   // de-accumulate number concentrations
+  for (bin = 0; bin < 5; bin++)
+  {
+    nc[bin] -= nc[bin + 1]; // de-accumulate number concentrations
   }
 }
 
-SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num){
-  status = trigRead();  // read comand on passive mode
+SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num)
+{
+  status = trigRead();                   // read comand on passive mode
   decodeBuffer(tsi_mode, truncated_num); // decode message only if buffer checks out
   return status;
 }
