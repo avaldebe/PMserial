@@ -42,6 +42,28 @@ platformio run -e mega2560 -t upload
 platformio run -e mega2560 -t monitor
 ```
 
+## STM32 `genericSTM32F103C8`
+
+**Note** This is a 3.3V board, and the PMS5003 requires 5V.
+You need provide 5V for the fan to operate properly.
+
+- Serial1 on pins PA10 (RX) and PA9 (TX),
+- Serial2 on pins PA3  (RX) and PA2 (TX),
+- Serial3 on pins PB11 (RX) and PB10 (TX).
+
+This example uses Serial1.
+
+```bash
+# compile
+platformio run -e genericSTM32F103C8
+
+# upload
+platformio run -e genericSTM32F103C8 -t upload
+
+# open serial monitor
+platformio run -e genericSTM32F103C8 -t monitor
+```
+
 ## STM32 `maple_mini`
 
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.

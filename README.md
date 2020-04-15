@@ -34,7 +34,7 @@ Arduino library for PM sensors with serial interface
 | Atmega32u4 @  8MHz |              |              |     X      |                                                       |
 | Atmega32u4 @ 16MHz |              |              |     X      | [HardwareSerial][]                                    |
 | Atmega2560 @ 16MHz |      X       |              |            | [HardwareSerial][]                                    |
-| STM32f103c8        |              |              |     X      |                                                       |
+| STM32f103c8        |      X       |              |            | [HardwareSerial][]                                    |
 | STM32f103cb        |              |              |     X      | [HardwareSerial][]                                    |
 | ESP8266            |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | [needs EspSoftwareSerial@>=6.7.1][] |
 | ESP32              |      X       |              |            | [HardwareSerial][]                     [OLED 64x48][] | [Serial1 not supported][]           |
