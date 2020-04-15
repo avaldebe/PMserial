@@ -1,4 +1,4 @@
-# PMSerial: test/main.cpp
+# PMSerial: debug/main.cpp
 
 This is not really an example, but the code used to test and debug changes to the library.
 It is a combination of the [HardwareSerial][] and [SoftwareSerial][] examples,
@@ -25,7 +25,7 @@ Two additional methods are compiled with the `PMS_DEBUG` directive.
 
 `print_buffer` partially decodes the contents of the message buffer
 and print the result. The following line writes the message buffer to `Serial`
-formated as zero padded hexadecimals.
+formatted as zero padded hexadecimals.
 
 ```c++
 pms.print_buffer(Serial, " %04X");

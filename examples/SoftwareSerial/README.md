@@ -79,7 +79,7 @@ platformio run -e esp01 -t monitor
 
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.
 
-- SWSerial on pins GPIO2/D4 (RX) and GPIO0/D3 (TX).
+- SWSerial on pins GPIO13/D7 (RX) and GPIO12/D6 (TX).
 
 ```bash
 # compile
