@@ -14,6 +14,10 @@ with calls to some special debugging methods.
 - ESP8266: `esp01`, `esp01_1m`, `d1_mini`
 - ESP32: `mhetesp32minikit`, `m5stack-core-esp32`
 
+Please note that the ESP8266 boards need [EspSoftwareSerial@>=6.7.1][issue6]
+
+[issue6]: https://github.com/avaldebe/PMserial/issues/6
+
 ## Debugging methods
 
 Two additional methods are compiled with the `PMS_DEBUG` directive.

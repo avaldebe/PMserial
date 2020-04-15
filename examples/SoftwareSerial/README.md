@@ -63,6 +63,9 @@ platformio run -e mini328_3V3 -t monitor
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.
 
 - SWSerial on pins GPIO2 (RX) and GPIO0 (TX).
+- Needs [EspSoftwareSerial@>=6.7.1][issue6]
+
+[issue6]: https://github.com/avaldebe/PMserial/issues/6
 
 ```bash
 # compile
@@ -80,6 +83,7 @@ platformio run -e esp01 -t monitor
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.
 
 - SWSerial on pins GPIO13/D7 (RX) and GPIO12/D6 (TX).
+- Needs [EspSoftwareSerial@>=6.7.1][issue6]
 
 ```bash
 # compile
