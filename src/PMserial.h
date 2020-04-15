@@ -114,10 +114,10 @@ public:
     }
   }
 #endif
-  inline uint16_t waited_ms()
-  {
-    return wait_ms;
-  } // debug timing
+  // debug timing
+  inline uint16_t waited_ms() { return wait_ms; }
+  // debug readBytes
+  inline uint16_t bytes_read() { return nbytes; }
 #endif
 
 protected:
@@ -136,7 +136,7 @@ protected:
 
   // message buffer
   static const uint8_t BUFFER_LEN = 32;
-  uint8_t buffer[BUFFER_LEN];
+  uint8_t buffer[BUFFER_LEN], nbytes;
   inline uint16_t buff2word(uint8_t n) { return (buffer[n] << 8) | buffer[n + 1]; }
 };
 

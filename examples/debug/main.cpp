@@ -99,14 +99,18 @@ void statusPMS()
   if (!pms)
     errors++;
 #if defined(ESP8266) || defined(ESP8266)
-  Serial.printf("\nErrors %d/%d, waited %d ms\n", errors, readings, pms.waited_ms());
+  Serial.printf("\nErrors %d/%d, %d bytes read, %d ms waited\n", errors, readings, pms.bytes_read(), pms.waited_ms());
 #else
   Serial.print(F("\nErrors "));
   Serial.print(errors);
   Serial.print(F("/"));
   Serial.print(readings);
-  Serial.print(F(", waited "));
+  Serial.print(F(", "));
+  Serial.println(pms.bytes_read());
+  Serial.print(F(" bytes read"));
+  Serial.print(F(", "));
   Serial.println(pms.waited_ms());
+  Serial.println(F(" ms waited"));
 #endif
   switch (pms.status)
   {

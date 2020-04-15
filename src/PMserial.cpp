@@ -107,7 +107,8 @@ SerialPM::STATUS SerialPM::trigRead()
 
   // read message header
   const size_t headLen = 4; // message header length
-  if (uart->readBytes(&buffer[0], headLen) != headLen)
+  nbytes = uart->readBytes(&buffer[0], headLen);
+  if (nbytes != headLen)
     return ERROR_MSG_HEADER;
 
   // message header starts with 'BM'
@@ -141,7 +142,8 @@ SerialPM::STATUS SerialPM::trigRead()
     return ERROR_MSG_LENGTH;
 
   // read message body
-  if (uart->readBytes(&buffer[headLen], bodyLen) != bodyLen)
+  nbytes += uart->readBytes(&buffer[headLen], bodyLen);
+  if (nbytes != messageLen)
     return ERROR_MSG_BODY;
 
   if (!checkBuffer(messageLen))
