@@ -94,19 +94,20 @@ SerialPM::STATUS SerialPM::trigRead()
   uart->write(trg, msgLen); // passive mode read
   uart->flush();
 
+  // wait for the mesage header
+  const size_t headLen = 4;     // message header length
   uint32_t start_ms = millis(); // start waiting time
   do
   {                                // ~650ms to complete a measurements
     delay(10);                     // wait up to max_wait_ms
     wait_ms = millis() - start_ms; // time waited so far
-  } while (!uart->available() && wait_ms < max_wait_ms);
+  } while (!uart->available() < headLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
     return ERROR_TIMEOUT;
 
   // read message header
-  const size_t headLen = 4; // message header length
   nbytes = uart->readBytes(&buffer[0], headLen);
   if (nbytes != headLen)
     return ERROR_MSG_HEADER;
@@ -140,6 +141,17 @@ SerialPM::STATUS SerialPM::trigRead()
   // full message should fit in the buffer
   if (messageLen > BUFFER_LEN)
     return ERROR_MSG_LENGTH;
+
+  // wait for the message body
+  do
+  {                                // ~650ms to complete a measurements
+    delay(10);                     // wait up to max_wait_ms
+    wait_ms = millis() - start_ms; // time waited so far
+  } while (!uart->available() < bodyLen && wait_ms < max_wait_ms);
+
+  // we should an answer/message after 650ms
+  if (!uart->available())
+    return ERROR_TIMEOUT;
 
   // read message body
   nbytes += uart->readBytes(&buffer[headLen], bodyLen);
