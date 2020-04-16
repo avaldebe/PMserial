@@ -110,7 +110,7 @@ SerialPM::STATUS SerialPM::trigRead()
   {                                // ~650ms to complete a measurements
     delay(10);                     // wait up to max_wait_ms
     wait_ms = millis() - start_ms; // time waited so far
-  } while (uart->available() < headLen && wait_ms < max_wait_ms);
+  } while (size_t(uart->available()) < headLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
@@ -159,7 +159,7 @@ SerialPM::STATUS SerialPM::trigRead()
   {                                // ~650ms to complete a measurements
     delay(10);                     // wait up to max_wait_ms
     wait_ms = millis() - start_ms; // time waited so far
-  } while (uart->available() < bodyLen && wait_ms < max_wait_ms);
+  } while (size_t(uart->available()) < bodyLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
@@ -219,6 +219,8 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num)
     hcho = buff2word(28) * 1e-3;
     temp = int8_t(buff2word(30)) * 1e-1; // cast to signed integer
     rhum = buff2word(32) * 1e-1;
+    break;
+  default:
     break;
   }
 
