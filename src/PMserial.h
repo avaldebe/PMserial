@@ -67,6 +67,14 @@ public:
       uint16_t n0p3, n0p5, n1p0, n2p5, n5p0, n10p0;
     };
   };
+  union {
+    float extra[3]; // T/RH/HCHO
+    struct
+    {
+      // temperature [°C], relative humidity [%], formaldehyde concentration [mg/m3]
+      float temp, rhum, hcho;
+    };
+  };
 #ifdef HAS_HW_SERIAL
   SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor)
   {
@@ -152,7 +160,7 @@ protected:
   uint16_t wait_ms; // time spent waiting for new sample
 
   // message buffer
-  static const uint8_t BUFFER_LEN = 32;
+  static const uint8_t BUFFER_LEN = 40;
   uint8_t buffer[BUFFER_LEN], nbytes;
   inline uint16_t buff2word(uint8_t n) { return (buffer[n] << 8) | buffer[n + 1]; }
 };

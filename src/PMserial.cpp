@@ -137,6 +137,9 @@ SerialPM::STATUS SerialPM::trigRead()
   case 32:
     sensor = PLANTOWER_32B;
     break;
+  case 40:
+    sensor = PLANTOWER_40B;
+    break;
   default:
     return ERROR_MSG_UNKNOWN;
   }
