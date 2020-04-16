@@ -2,15 +2,22 @@
     "cSpell.words": [
         "ATmega",
         "CKSUM",
+        "HWSERIAL",
         "MCU",
         "PMSA",
         "PMSerial",
         "Plantower",
         "UART",
+        "bluepill",
+        "chlen",
         "datasheet",
         "esp",
         "espressif",
+        "megaatmega",
+        "mhetesp",
         "minikit",
+        "nbar",
+        "nbin",
         "uint"
     ]
 }

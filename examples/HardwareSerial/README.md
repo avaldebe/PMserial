@@ -142,7 +142,6 @@ This example uses Serial2.
 
 [esp32sw]: ../SoftwareSerial/README.md#mhetesp32minikit
 
-
 ```bash
 # compile
 platformio run -e esp32minikit
