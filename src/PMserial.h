@@ -32,15 +32,21 @@
 
 enum PMS
 {
-  PLANTOWER_AUTO,           // self discovery
-  PLANTOWER_24B,            // 24 byte long message, no count info (LBC)
-  PLANTOWER_32B,            // 32 byte long message, w/count info (LBC)
-  PMSx003 = PLANTOWER_AUTO, // self discovery
-  PMS1003 = PLANTOWER_32B,  // G1
-  PMS3003 = PLANTOWER_24B,  // G3
-  PMS5003 = PLANTOWER_32B,  // G5
-  PMS7003 = PLANTOWER_32B,  // G7
-  PMSA003 = PLANTOWER_32B   // G10
+  PLANTOWER_AUTO,             // self discovery
+  PLANTOWER_24B,              // 24 byte long message, no count info (LBC)
+  PLANTOWER_32B,              // 32 byte long message, w/count info (LBC)
+  PLANTOWER_32B_S,            // 32 byte long message, w/count info and HCHO (LBC)
+  PLANTOWER_32B_T,            // 32 byte long message, w/partial count info, temp and rhum (LBC)
+  PLANTOWER_40B,              // 40 byte long message, w/count info, temp, rhum and HCHO (LBC)
+  PMSx003 = PLANTOWER_AUTO,   // self discovery
+  PMS1003 = PLANTOWER_32B,    // G1
+  PMS3003 = PLANTOWER_24B,    // G3
+  PMS5003 = PLANTOWER_32B,    // G5
+  PMS5003S = PLANTOWER_32B_S, // G5S
+  PMS5003T = PLANTOWER_32B_T, // G5T
+  PMS5003ST = PLANTOWER_40B,  // G5ST
+  PMS7003 = PLANTOWER_32B,    // G7
+  PMSA003 = PLANTOWER_32B     // G10
 };
 
 class SerialPM
