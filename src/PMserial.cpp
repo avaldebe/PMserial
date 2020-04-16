@@ -110,7 +110,7 @@ SerialPM::STATUS SerialPM::trigRead()
   {                                // ~650ms to complete a measurements
     delay(10);                     // wait up to max_wait_ms
     wait_ms = millis() - start_ms; // time waited so far
-  } while (!uart->available() < headLen && wait_ms < max_wait_ms);
+  } while (uart->available() < headLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
@@ -156,7 +156,7 @@ SerialPM::STATUS SerialPM::trigRead()
   {                                // ~650ms to complete a measurements
     delay(10);                     // wait up to max_wait_ms
     wait_ms = millis() - start_ms; // time waited so far
-  } while (!uart->available() < bodyLen && wait_ms < max_wait_ms);
+  } while (uart->available() < bodyLen && wait_ms < max_wait_ms);
 
   // we should an answer/message after 650ms
   if (!uart->available())
