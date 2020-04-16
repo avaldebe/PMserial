@@ -204,6 +204,24 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num)
     nc[bin] = buff2word(n); // number particles w/diameter > r_bin
   }
 
+  switch (pms)
+  {
+  case PMS5003S:
+    hcho = buff2word(28) * 1e-3;
+    break;
+  case PMS5003T:
+    temp = int8_t(n5p0) * 1e-1; // cast to signed integer
+    rhum = n10p0 * 1e-1;
+    n5p0 = 0;
+    n10p0 = 0;
+    break;
+  case PMS5003ST:
+    hcho = buff2word(28) * 1e-3;
+    temp = int8_t(buff2word(30)) * 1e-1; // cast to signed integer
+    rhum = buff2word(32) * 1e-1;
+    break;
+  }
+
   if (!truncated_num)
     return;
   for (bin = 0; bin < 5; bin++)
