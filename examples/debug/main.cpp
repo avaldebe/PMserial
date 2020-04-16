@@ -102,7 +102,7 @@ void statusPMS()
   readings++;
   if (!pms)
     errors++;
-#if defined(ESP8266) || defined(ESP8266)
+#if defined(ESP8266) || defined(ESP32)
   Serial.printf("\nErrors %d/%d, %d bytes read, %d ms waited\n", errors, readings, pms.bytes_read(), pms.waited_ms());
 #else
   Serial.print(F("\nErrors "));
