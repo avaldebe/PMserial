@@ -8,13 +8,16 @@ Arduino library for PM sensors with serial interface
 
 ## Sensors
 
-| [Plantower][]     | Tested Works | Doesn't Work | Not Tested | Datasheet                   | Notes                |
-| ----------------- | :----------: | :----------: | :--------: | --------------------------- | -------------------- |
-| PMS1003 (aka G1)  |              |              |     X      | [en][g1aqmd],  [cn][g1lcsc] |
-| PMS3003 (aka G3)  |      X       |              |            | [en][g3aqmon], [cn][g3lcsc] | No passive mode read |
-| PMS5003 (aka G5)  |      X       |              |            | [en][g5aqmd],  [cn][g5lcsc] |
-| PMS7003 (aka G7)  |      X       |              |            | [cn][g7lcsc]                |
-| PMSA003 (aka G10) |              |              |     X      | [cn][gAlcsc]                |
+| [Plantower][]        | Tested Works | Doesn't Work | Not Tested | Datasheet                   | Notes                |
+| -------------------- | :----------: | :----------: | :--------: | --------------------------- | -------------------- |
+| PMS1003 (aka G1)     |              |              |     X      | [en][g1aqmd],  [cn][g1lcsc] |
+| PMS3003 (aka G3)     |      X       |              |            | [en][g3aqmon], [cn][g3lcsc] | No passive mode read |
+| PMS5003 (aka G5)     |      X       |              |            | [en][g5aqmd],  [cn][g5lcsc] |
+| PMS5003S (aka G5S)   |              |              |     x      | [cn][g5slcsc]               |
+| PMS5003T (aka G5T)   |              |              |     x      |
+| PMS5003ST (aka G5ST) |              |              |     x      |
+| PMS7003 (aka G7)     |      X       |              |            | [cn][g7lcsc]                |
+| PMSA003 (aka G10)    |              |              |     X      | [cn][gAlcsc]                |
 
 [plantower]: http://www.plantower.com/
 [g1aqmd]:    http://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms1003-manual_v2-5.pdf?sfvrsn=2
@@ -24,6 +27,7 @@ Arduino library for PM sensors with serial interface
 [g1lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS1003_C89289.pdf
 [g3lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS3003_C87024.pdf
 [g5lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS5003_C91431.pdf
+[g5slcsc]:   https://datasheet.lcsc.com/szlcsc/PMS5003S_C91432.pdf
 [g7lcsc]:    https://datasheet.lcsc.com/szlcsc/PMS7003_C84815.pdf
 [gAlcsc]:    https://datasheet.lcsc.com/szlcsc/PMSA003-A_C132744.pdf
 
@@ -48,6 +52,12 @@ Arduino library for PM sensors with serial interface
 [OLED 64x48]:     examples/OLED_64x48/README.md
 
 ## Usage
+
+### `PMSx003` sensor type
+
+The `PMSx003` sensor type will infer the sensor type from the message header.
+The sensor type inference does not cover the `PMS5003S` and `PMS5003T` variants, see [#10][GH10].
+`PMS5003S` and `PMS5003T` sensors need to be declared explicitly on the `SerialPM` constructor.
 
 ### PMSx003 on HardwareSerial
 
@@ -126,45 +136,59 @@ The [HardwareSerial example][esp32hw] uses Serial2.
 ## Advanced usage
 
 ### Sensor message/protocol
+
+With the exemption of the `PMS3003` and `PMS5003ST`, all supported sensors
 transmit particulate matter (PM) and number concentrations (NC)
 measurements in a 32 byte long message.
-The PMS3003 only transmit PM measurements in a 24 byte message.
+The `PMS3003` only transmit PM measurements in a 24 byte message.
+The `PMS5003ST` transmit PM, NC, temperature (T), relative humidity (RH) and formaldehyde concentration (HCHO) measurements
+on a 40 byte message.
 
-The `PMSx003` message/protocol on the examples will
-determine the message length automatically.
-The available protocols are:
+On the examples, the `PMSx003` sensor type  will infer the sensor type from the message header
+and select the message length and decoding protocol accordingly.
+The supported protocols are:
 
-| message/protocol | length         |  PM   |  NC   | sensors (aliases)                          |
-| ---------------- | -------------- | :---: | :---: | ------------------------------------------ |
-| `PLANTOWER_32B`  | 32 bytes       |   X   |   X   | `PMS1003`, `PMS5003`, `PMS7003`, `PMSA003` |
-| `PLANTOWER_24B`  | 24 bytes       |   X   |       | `PMS3003`                                  |
-| `PLANTOWER_AUTO` | self discovery |   X   | auto  | `PMSx003`                                  |
+| message/protocol  | length         |  PM   |  NC   | T & RH | HCHO  | sensors (aliases)                          |
+| ----------------- | -------------- | :---: | :---: | :----: | :---: | ------------------------------------------ |
+| `PLANTOWER_AUTO`  | self discovery |   3   | auto  |        |       | `PMSx003`                                  |
+| `PLANTOWER_24B`   | 24 bytes       |   3   |       |        |       | `PMS3003`                                  |
+| `PLANTOWER_32B`   | 32 bytes       |   3   |   6   |        |       | `PMS1003`, `PMS5003`, `PMS7003`, `PMSA003` |
+| `PLANTOWER_32B_S` | 32 bytes       |   3   |   6   |        |   X   | `PMS5003S`, can not be self discovered     |
+| `PLANTOWER_32B_T` | 32 bytes       |   3   |   4   |   X    |       | `PMS5003T`, can not be self discovered     |
+| `PLANTOWER_40B`   | 40 bytes       |   3   |   6   |   X    |   X   | `PMS5003ST`                                |
 
 ### Additional measurements
 
 The `pms.read()`  method will request a new measurement set from the sensor and decode the sensor message.
 The `has_particulate_matter()`/`has_number_concentration()` methods indicate if the message was valid
 and PM/NC measurements were successfully decoded.
+Similarly the `has_temperature_humidity`/`has_formaldehyde` methods indicate if the message was valid
+and T & RH/HCHO measurements were successfully decoded, however
+this kind of additional measurements are only available on `PMS5003S`, `PMS5003T` and `PMS5003ST` sensors.
 
 ### Decoded measurements
 
 All measurements found in the sensor message
 will be decoded and stored in following member variables:
 
-| variable | type[len]     | measurement | particle diameter    | unit     | Notes                             |
-| -------- | ------------- | ----------- | -------------------- | -------- | --------------------------------- |
-| `pm01`   | `uint16_t`    | PM          | <= 1.0 µm            | µg/m3    | PM1.0, ultra fine particles       |
-| `pm25`   | `uint16_t`    | PM          | <= 2.5 µm            | µg/m3    | PM2.5, fine particles             |
-| `pm10`   | `uint16_t`    | PM          | <= 10  µm            | µg/m3    | PM10                              |
-| `n0p3`   | `uint16_t`    | NC          | >= 0.3 µm            | #/100cm3 |
-| `n0p5`   | `uint16_t`    | NC          | >= 0.5 µm            | #/100cm3 |
-| `n1p0`   | `uint16_t`    | NC          | >= 1.0 µm            | #/100cm3 |
-| `n2p5`   | `uint16_t`    | NC          | >= 2.5 µm            | #/100cm3 |
-| `n5p0`   | `uint16_t`    | NC          | >= 5.0 µm            | #/100cm3 |
-| `n10p0`  | `uint16_t`    | NC          | >= 10  µm            | #/100cm3 |
-| `pm`     | `uint16_t[3]` | PM          | <= 1,2.5,10 µm       | µg/m3    | array containing `pm01,pm25,pm10` |
-| `nc`     | `uint16_t[6]` | NC          | >= 0.3,0.5,1,5,10 µm | #/100cm3 | array containing `n0p3,..,n10p0`  |
-| `data`   | `uint16_t[9]` | PM/NC       |                      |          | all PM/NC data `pm01,..,n10p0`    |
+| variable | type[len]     | measurement | particle diameter    | unit      | Notes                             |
+| -------- | ------------- | ----------- | -------------------- | --------- | --------------------------------- |
+| `pm01`   | `uint16_t`    | PM          | <= 1.0 µm            | µg/m³     | PM1.0, ultra fine particles       |
+| `pm25`   | `uint16_t`    | PM          | <= 2.5 µm            | µg/m³     | PM2.5, fine particles             |
+| `pm10`   | `uint16_t`    | PM          | <= 10  µm            | µg/m³     | PM10                              |
+| `n0p3`   | `uint16_t`    | NC          | >= 0.3 µm            | #/100 cm³ |
+| `n0p5`   | `uint16_t`    | NC          | >= 0.5 µm            | #/100 cm³ |
+| `n1p0`   | `uint16_t`    | NC          | >= 1.0 µm            | #/100 cm³ |
+| `n2p5`   | `uint16_t`    | NC          | >= 2.5 µm            | #/100 cm³ |
+| `n5p0`   | `uint16_t`    | NC          | >= 5.0 µm            | #/100 cm³ |
+| `n10p0`  | `uint16_t`    | NC          | >= 10  µm            | #/100 cm³ |
+| `pm`     | `uint16_t[3]` | PM          | <= 1,2.5,10 µm       | µg/m³     | array containing `pm01,pm25,pm10` |
+| `nc`     | `uint16_t[6]` | NC          | >= 0.3,0.5,1,5,10 µm | #/100cm³  | array containing `n0p3,..,n10p0`  |
+| `data`   | `uint16_t[9]` | PM/NC       |                      |           | all PM/NC data `pm01,..,n10p0`    |
+| `temp`   | `float`       | T           |                      | °C        | temperature                       |
+| `rhum`   | `float`       | RH          |                      | %         | relative humidity                 |
+| `hcho`   | `float`       | HCHO        |                      | mg/m³     | formaldehyde concentration        |
+| `extra`  | `float[3]`    | T/RH/HCHO   |                      |           | array containing `temp,rhum,hcho` |
 
 For an efficient use of memory, the `data`, `pm` and `nc` arrays and the
 individual measurement variables are implemented with a union/struct combination.
@@ -208,6 +232,7 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 ## Changelog
 
 - Work in progress
+  - Support the PMS5003 S/ST/T variants [#10][GH10]
   - Use Serial1 as "SoftwareSerial" for ESP32, [#7][GH7]
 - 1.0.1
   - Fix broken SoftwareSerial for ESP8266, [#6][GH6]
@@ -215,5 +240,6 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 - 1.0.0
   - first complete release
 
-[GH6]: https://github.com/avaldebe/PMserial/issues/6
-[GH7]: https://github.com/avaldebe/PMserial/issues/7
+[GH6]:  https://github.com/avaldebe/PMserial/issues/6
+[GH7]:  https://github.com/avaldebe/PMserial/issues/7
+[GH10]: https://github.com/avaldebe/PMserial/issues/10
