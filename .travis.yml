@@ -1,0 +1,22 @@
+language: python
+python:
+  - "2.7"
+
+cache:
+  directories:
+    - "~/.platformio"
+
+env:
+  - PLATFORMIO_CI_SRC=examples/HardwareSerial
+  - PLATFORMIO_CI_SRC=examples/SoftwareSerial
+  - PLATFORMIO_CI_SRC=examples/OLED_64x48
+  - PLATFORMIO_CI_SRC=examples/debug
+
+install:
+  - pip install -U platformio
+  - pio update
+  - pio lib -g install ESP8266_SSD1306
+  - pio lib -g install EspSoftwareSerial@>=6.7.1
+
+script:
+  - pio ci -l ./ -c $PLATFORMIO_CI_SRC/platformio.ini

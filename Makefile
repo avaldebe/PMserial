@@ -6,4 +6,4 @@ test: $(TEST)
 all:  $(INI)
 
 $(INI):
-	pio run -d $(@D)
+	pio ci -l ./ -c $@ $(@D)
