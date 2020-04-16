@@ -114,6 +114,8 @@ public:
   operator bool() { return status == OK; }
   inline bool has_particulate_matter() { return status == OK; }
   inline bool has_number_concentration() { return (status == OK) && (pms == PLANTOWER_32B); }
+  inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
+  inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
 #ifdef PMS_DEBUG
 #ifdef HAS_HW_SERIAL
   inline void print_buffer(Stream &term, const char *fmt)
