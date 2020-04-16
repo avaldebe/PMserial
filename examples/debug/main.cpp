@@ -20,7 +20,11 @@ SerialPM pms(PMSx003, Serial1); // PMSx003, UART
 #define MSG "PMSx003 on HardwareSerial"
 SerialPM pms(PMSx003, Serial); // PMSx003, UART
 #elif defined(PMS_RX) && defined(PMS_TX)
+#ifdef ESP32
+#define MSG "PMSx003 on HardwareSerial1"
+#else
 #define MSG "PMSx003 on SoftwareSerial"
+#endif
 SerialPM pms(PMSx003, PMS_RX, PMS_TX); // PMSx003, RX, TX
 #elif defined(ESP32)
 #define MSG "PMSx003 on HardwareSerial2"

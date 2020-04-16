@@ -95,3 +95,49 @@ platformio run -e d1_mini -t upload
 # open serial monitor
 platformio run -e d1_mini -t monitor
 ```
+
+## ESP32 `esp32minikit`
+
+**Note** This is a 3.3V board, and the PMS5003 requires 5V.
+You need provide 5V for the fan to operate properly.
+
+- Serial1 is by default on pins 9 (RX) and 10 (TX).
+- Serial2 on pins 16 (RX) and 17 (TX).
+
+On some ESP32 boards Serial1 default pins are connected to the flash.
+Using the standard constructor will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
+
+```Arduino
+// will crash the ESP32
+SerialPM pms(PMSx003, Serial1);
+````
+
+Fortunately, it is possible to define alternative for pins by calling:
+
+```Arduino
+// define Serial1 pins
+Serial1.begin(9600, SERIAL_8N1, <RX>, <TX>);
+```
+
+The PMSerial library uses this feature to implement the flexibility of SoftwareSerial
+
+```Arduino
+// define Serial1 pins
+SerialPM pms(PMS5003, <RX>, <TX>);
+````
+
+This example uses Serial1 on pins 16 (RX) and 17 (TX).
+The [HardwareSerial example][esp32hw] uses Serial2 directly.
+
+[esp32hw]: ../HardwareSerial/README.md#esp32-esp32minikit
+
+```bash
+# compile
+platformio run -e esp32minikit
+
+# upload
+platformio run -e esp32minikit -t upload
+
+# open serial monitor
+platformio run -e esp32minikit -t monitor
+```

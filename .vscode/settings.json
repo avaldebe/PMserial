@@ -1,8 +1,16 @@
 {
     "cSpell.words": [
+        "ATmega",
+        "CKSUM",
+        "MCU",
         "PMSA",
+        "PMSerial",
+        "Plantower",
+        "UART",
+        "datasheet",
         "esp",
         "espressif",
-        "minikit"
+        "minikit",
+        "uint"
     ]
 }

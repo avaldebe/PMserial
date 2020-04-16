@@ -75,6 +75,12 @@ public:
     uart = &serial;
     hwSerial = false;
   }
+#elif defined(ESP32)
+  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor), rx(rx), tx(tx)
+  {
+    uart = &Serial1;
+    hwSerial = true;
+  }
 #endif
   void init();
 #define PMS_ERROR_TIMEOUT "Sensor read timeout"
@@ -124,6 +130,9 @@ protected:
   Stream *uart;  // hardware/software serial
   PMS pms;       // sensor type/message protocol
   bool hwSerial; // Is uart hardware serial? (or software serial)
+#ifdef ESP32
+  uint8_t rx, tx; // Serial1 pins on ESP32
+#endif
 
   // utility functions
   STATUS trigRead();

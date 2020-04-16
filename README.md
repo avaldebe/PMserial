@@ -25,25 +25,23 @@ Arduino library for PM sensors with serial interface
 
 ## Compatibility
 
-| MCU                | Tested Works | Doesn't Work | Not Tested | Examples                                              | Notes                               |
-| ------------------ | :----------: | :----------: | :--------: | ----------------------------------------------------- | ----------------------------------- |
-| Atmega328  @  8MHz |      X       |              |            | [SoftwareSerial][]                                    |
-| Atmega328  @ 16MHz |              |              |     X      | [SoftwareSerial][]                                    |
+| MCU                | Tested Works | Doesn't Work | Not Tested | Examples                                              | Notes                                  |
+| ------------------ | :----------: | :----------: | :--------: | ----------------------------------------------------- | -------------------------------------- |
 | ATmega168  @  8MHz |              |              |     X      | [SoftwareSerial][]                                    |
-| Atmega168  @ 16MHz |              |              |     X      |                                                       |
+| Atmega168  @ 16MHz |              |              |     X      |                                                       | 5V boards need 3.3V/5V level shifter   |
+| Atmega328  @  8MHz |      X       |              |            | [SoftwareSerial][]                                    |
+| Atmega328  @ 16MHz |              |              |     X      |                                                       | 5V boards need 3.3V/5V level shifter   |
 | Atmega32u4 @  8MHz |              |              |     X      |                                                       |
-| Atmega32u4 @ 16MHz |              |              |     X      | [HardwareSerial][]                                    |
-| Atmega2560 @ 16MHz |      X       |              |            | [HardwareSerial][]                                    |
+| Atmega32u4 @ 16MHz |              |              |     X      | [HardwareSerial][]                                    | 5V boards need 3.3V/5V level shifter   |
+| Atmega2560 @ 16MHz |      X       |              |            | [HardwareSerial][]                                    | 5V boards need 3.3V/5V level shifter   |
 | STM32f103c8        |      X       |              |            | [HardwareSerial][]                                    |
 | STM32f103cb        |              |              |     X      | [HardwareSerial][]                                    |
-| ESP8266            |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | [needs EspSoftwareSerial@>=6.7.1][] |
-| ESP32              |      X       |              |            | [HardwareSerial][]                     [OLED 64x48][] | [Serial1 not supported][]           |
+| ESP8266            |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | [needs EspSoftwareSerial@>=6.7.1][GH6] |
+| ESP32              |      X       |              |            | [HardwareSerial][] [SoftwareSerial][]  [OLED 64x48][] | [Serial1 as SoftwareSerial][GH7]       |
 
 [SoftwareSerial]: examples/SoftwareSerial/README.md
 [HardwareSerial]: examples/HardwareSerial/README.md
 [OLED 64x48]:     examples/OLED_64x48/README.md
-[needs EspSoftwareSerial@>=6.7.1]:  https://github.com/avaldebe/PMserial/issues/6
-[Serial1 not supported]:            https://github.com/avaldebe/PMserial/tree/master/examples/HardwareSerial#esp32-esp32minikit
 
 ## Usage
 
@@ -67,7 +65,7 @@ void loop() {
 }
 ```
 
-Setup on different MCUs is covered on the [HardwareSerial][] example.
+Setup for different MCU is covered on the [HardwareSerial][] example.
 
 ### PMSx003 on SoftwareSerial
 
@@ -89,7 +87,37 @@ void loop() {
 }
 ```
 
-Setup on different MCUs is covered on the [SoftwareSerial][] example.
+Setup for different MCU is covered on the [SoftwareSerial][] example.
+
+## ESP32 Serial1
+
+On some ESP32 boards Serial1 default pins are connected to the flash.
+Using the standard constructor will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
+
+```Arduino
+// will crash the ESP32
+SerialPM pms(PMSx003, Serial1);
+````
+
+Fortunately, it is possible to define alternative for pins by calling:
+
+```Arduino
+// define Serial1 pins
+Serial1.begin(9600, SERIAL_8N1, <RX>, <TX>);
+```
+
+The PMSerial library uses this feature to implement the flexibility of SoftwareSerial
+
+```Arduino
+// define Serial1 pins
+SerialPM pms(PMS5003, <RX>, <TX>);
+````
+
+The [SoftwareSerial example][esp32hw] uses Serial1 on pins 16 (RX) and 17 (TX).
+The [HardwareSerial example][esp32hw] uses Serial2 directly.
+
+[esp32hw]: examples/HardwareSerial/README.md#esp32-esp32minikit
+[esp32sw]: examples/SoftwareSerial/README.md#esp32-esp32minikit
 
 ### PMSx003 message/protocol
 
@@ -175,11 +203,13 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 ## Changelog
 
+- Work in progress
+  - Use Serial1 as "SoftwareSerial" for ESP32, [#7][GH7]
 - 1.0.1
-  - Fix broken SoftwareSerial for ESP8266, [#6][GH4]
+  - Fix broken SoftwareSerial for ESP8266, [#6][GH6]
   - ESP8266 use EspSoftwareSerial@>=6.7.1
-
 - 1.0.0
   - first complete release
 
-[GH4]: https://github.com/avaldebe/PMserial/issues/6
+[GH6]: https://github.com/avaldebe/PMserial/issues/6
+[GH7]: https://github.com/avaldebe/PMserial/issues/7

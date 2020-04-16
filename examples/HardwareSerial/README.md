@@ -115,16 +115,33 @@ You need provide 5V for the fan to operate properly.
 - Serial1 is by default on pins 9 (RX) and 10 (TX).
 - Serial2 on pins 16 (RX) and 17 (TX).
 
-The Serial1 default pins are used by the flash.
-Using them will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
-It is possible to define alternative pines by calling
+On some ESP32 boards Serial1 default pins are connected to the flash.
+Using the standard constructor will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
 
 ```Arduino
-Serial1.begin(baud_rate, config, <rxPin>, <txPin>)
+// will crash the ESP32
+SerialPM pms(PMSx003, Serial1);
 ````
 
-Alas, this option is not supported by PMSerial.
-Therefore, this example uses Serial2 instead.
+Fortunately, it is possible to define alternative for pins by calling:
+
+```Arduino
+// define Serial1 pins
+Serial1.begin(9600, SERIAL_8N1, <RX>, <TX>);
+```
+
+The PMSerial library uses this feature to implement the flexibility of SoftwareSerial
+
+```Arduino
+// define Serial1 pins
+SerialPM pms(PMS5003, <RX>, <TX>);
+````
+
+The [SoftwareSerial example][esp32sw] uses Serial1 on pins 16 (RX) and 17 (TX).
+This example uses Serial2 directly.
+
+[esp32sw]: ../SoftwareSerial/README.md#esp32-esp32minikit
+
 
 ```bash
 # compile

@@ -65,7 +65,15 @@ const uint8_t
 
 void SerialPM::init()
 {
+#ifdef ESP32
+  if (hwSerial && rx && tx)
+  {
+    static_cast<HardwareSerial *>(uart)->begin(9600, SERIAL_8N1, rx, tx);
+  }
+  else if (hwSerial)
+#else
   if (hwSerial)
+#endif
   {
 #ifdef HAS_HW_SERIAL
     static_cast<HardwareSerial *>(uart)->begin(9600, SERIAL_8N1);
