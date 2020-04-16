@@ -1,6 +1,7 @@
 // SoftwareSerial.ino: Read PMS5003 sensor on SWSerial
-
+#ifndef ESP32
 #include <SoftwareSerial.h>
+#endif
 #include <PMserial.h>  // Arduino library for PM sensors with serial interface
 #if !defined(PMS_RX) && !defined(PMS_TX)
 const uint8_t PMS_RX=10, PMS_TX=11;

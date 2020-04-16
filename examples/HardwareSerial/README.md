@@ -107,7 +107,7 @@ platformio run -e esp01 -t upload
 platformio run -e esp01 -t monitor
 ```
 
-## ESP32 `esp32minikit`
+## ESP32 `mhetesp32minikit`
 
 **Note** This is a 3.3V board, and the PMS5003 requires 5V.
 You need provide 5V for the fan to operate properly.
@@ -137,10 +137,10 @@ The PMSerial library uses this feature to implement the flexibility of SoftwareS
 SerialPM pms(PMS5003, <RX>, <TX>);
 ````
 
-The [SoftwareSerial example][esp32sw] uses Serial1 on pins 16 (RX) and 17 (TX).
-This example uses Serial2 directly.
+The [SoftwareSerial example][esp32sw] uses Serial1 on pins 23 (RX) and 19 (TX).
+This example uses Serial2.
 
-[esp32sw]: ../SoftwareSerial/README.md#esp32-esp32minikit
+[esp32sw]: ../SoftwareSerial/README.md#mhetesp32minikit
 
 
 ```bash

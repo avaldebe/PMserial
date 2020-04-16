@@ -89,7 +89,7 @@ void loop() {
 
 Setup for different MCU is covered on the [SoftwareSerial][] example.
 
-## ESP32 Serial1
+### ESP32 Serial1
 
 On some ESP32 boards Serial1 default pins are connected to the flash.
 Using the standard constructor will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
@@ -110,18 +110,18 @@ The PMSerial library uses this feature to implement the flexibility of SoftwareS
 
 ```Arduino
 // define Serial1 pins
-SerialPM pms(PMS5003, <RX>, <TX>);
+SerialPM pms(PMSx003, <RX>, <TX>);
 ````
 
-The [SoftwareSerial example][esp32hw] uses Serial1 on pins 16 (RX) and 17 (TX).
-The [HardwareSerial example][esp32hw] uses Serial2 directly.
+The [SoftwareSerial example][esp32hw] uses Serial1 on pins 23 (RX) and 19 (TX).
+The [HardwareSerial example][esp32hw] uses Serial2.
 
-[esp32hw]: examples/HardwareSerial/README.md#esp32-esp32minikit
-[esp32sw]: examples/SoftwareSerial/README.md#esp32-esp32minikit
+[esp32hw]: examples/HardwareSerial/README.md#mhetesp32minikit
+[esp32sw]: examples/SoftwareSerial/README.md#mhetesp32minikit
 
-### PMSx003 message/protocol
+## Advanced usage
 
-With the exemption of the PMS3003, all supported sensors
+### Sensor message/protocol
 transmit particulate matter (PM) and number concentrations (NC)
 measurements in a 32 byte long message.
 The PMS3003 only transmit PM measurements in a 24 byte message.
@@ -136,13 +136,13 @@ The available protocols are:
 | `PLANTOWER_24B`  | 24 bytes       |   X   |       | `PMS3003`                                  |
 | `PLANTOWER_AUTO` | self discovery |   X   | auto  | `PMSx003`                                  |
 
-### PMSx003 reading
+### Additional measurements
 
 The `pms.read()`  method will request a new measurement set from the sensor and decode the sensor message.
 The `has_particulate_matter()`/`has_number_concentration()` methods indicate if the message was valid
 and PM/NC measurements were successfully decoded.
 
-### PMSx003 measurements
+### Decoded measurements
 
 All measurements found in the sensor message
 will be decoded and stored in following member variables:
@@ -166,7 +166,7 @@ For an efficient use of memory, the `data`, `pm` and `nc` arrays and the
 individual measurement variables are implemented with a union/struct combination.
 See the [examples](examples/) for an full PM/NC output.
 
-### PMSx003 status/error codes
+### Status and error codes
 
 The `pms.status` member variable contains the status and eventual error code
 resulting from the last sensor read.
@@ -185,12 +185,12 @@ The available status/error codes and pre-defined error messages are:
 | `pms.ERROR_MSG_CKSUM`   | `PMS_ERROR_MSG_CKSUM`   | "Wrong message checksum"    |
 
 For easy of use, the error message are pre-defined with `#define`.
-See the [examples](examples/) for an error handling implementation.
+See the [examples](examples/) for error handling implementation.
 
 ## Contribute back
 
 If you have read this far, this is the library for your project
-or you you can not figure out how to use it. In any case, I can use your help.
+or you can not figure out how to use it. In any case, I can use your help.
 
 If you find any typos or something is not clear, please go to issue [#3][GH3] and leave a message.
 Reopen the issue if needed.
