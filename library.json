@@ -1,6 +1,6 @@
 {
     "name": "PMSerial",
-    "keywords": "air-quality, particulate-matter, pms3003, pms5003, pms7003",
+    "keywords": "air-quality, particulate-matter, pms3003, pms5003, pms7003, pmsA003",
     "description": "Arduino library for PM sensors with serial interface",
     "homepage": "https://github.com/avaldebe/PMserial",
     "license": "MIT",
