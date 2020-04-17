@@ -232,8 +232,9 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 ## Changelog
 
 - Work in progress
-  - Support the PMS5003 S/ST/T variants [#10][GH10]
-  - Use Serial1 as "SoftwareSerial" for ESP32, [#7][GH7]
+  - Support `atmelsam` devices [#8][GH8]/[PR12][]
+  - Support the PMS5003 S/ST/T sensors [#10][GH10]
+  - Use Serial1 as "SoftwareSerial" for ESP32, [#7][GH7]/[PR9][]
 - 1.0.1
   - Fix broken SoftwareSerial for ESP8266, [#6][GH6]
   - ESP8266 use EspSoftwareSerial@>=6.7.1
@@ -242,4 +243,7 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 [GH6]:  https://github.com/avaldebe/PMserial/issues/6
 [GH7]:  https://github.com/avaldebe/PMserial/issues/7
+[GH8]:  https://github.com/avaldebe/PMserial/issues/8
+[PR9]:  https://github.com/avaldebe/PMserial/pull/9
 [GH10]: https://github.com/avaldebe/PMserial/issues/10
+[PR12]: https://github.com/avaldebe/PMserial/pull/12
