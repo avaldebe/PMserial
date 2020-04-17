@@ -152,3 +152,21 @@ platformio run -e esp32minikit -t upload
 # open serial monitor
 platformio run -e esp32minikit -t monitor
 ```
+
+## Arduino `mkrwifi1010`
+
+**Note** This is a 3.3V board, and the PMS5003 requires 5V.
+You need provide 5V for the fan to operate properly.
+
+- Serial1 on pins 13 (RX) and 14 (TX).
+
+```bash
+# compile
+platformio run -e mkrwifi1010
+
+# upload
+platformio run -e mkrwifi1010 -t upload
+
+# open serial monitor
+platformio run -e mkrwifi1010 -t monitor
+```

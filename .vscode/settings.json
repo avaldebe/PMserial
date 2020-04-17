@@ -19,9 +19,11 @@
         "megaatmega",
         "mhetesp",
         "minikit",
+        "mkrwifi",
         "nbar",
         "nbin",
         "rhum",
+        "samd",
         "uint"
     ]
 }
