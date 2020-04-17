@@ -4,6 +4,7 @@
         "CKSUM",
         "HCHO",
         "HWSERIAL",
+        "Hzatmega",
         "MCU",
         "PMSA",
         "PMSerial",
@@ -11,6 +12,8 @@
         "SERIALPM",
         "UART",
         "USART",
+        "atmelavr",
+        "atmelsam",
         "bluepill",
         "chlen",
         "datasheet",
@@ -24,6 +27,8 @@
         "nbin",
         "rhum",
         "samd",
+        "stlink",
+        "ststm",
         "uint"
     ]
 }

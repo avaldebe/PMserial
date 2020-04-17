@@ -61,7 +61,7 @@ The sensor type inference does not cover the `PMS5003S` and `PMS5003T` variants,
 
 ### PMSx003 on HardwareSerial
 
-```arduino
+```c++
 #include <PMserial.h>
 SerialPM pms(PMSx003, Serial);  // PMSx003, UART
 
@@ -83,7 +83,7 @@ Setup for different MCU is covered on the [HardwareSerial][] example.
 
 ### PMSx003 on SoftwareSerial
 
-```arduino
+```c++
 #include <PMserial.h>
 SerialPM pms(PMSx003, 10, 11);  // PMSx003, RX, TX
 
@@ -108,30 +108,30 @@ Setup for different MCU is covered on the [SoftwareSerial][] example.
 On some ESP32 boards Serial1 default pins are connected to the flash.
 Using the standard constructor will cause a crash, see [espressif/arduino-esp32#148](https://github.com/espressif/arduino-esp32/issues/148).
 
-```Arduino
+```c++
 // will crash the ESP32
 SerialPM pms(PMSx003, Serial1);
-````
+```
 
 Fortunately, it is possible to define alternative for pins by calling:
 
-```Arduino
+```c++
 // define Serial1 pins
 Serial1.begin(9600, SERIAL_8N1, <RX>, <TX>);
 ```
 
 The PMSerial library uses this feature to implement the flexibility of SoftwareSerial
 
-```Arduino
+```c++
 // define Serial1 pins
 SerialPM pms(PMSx003, <RX>, <TX>);
-````
+```
 
 The [SoftwareSerial example][esp32hw] uses Serial1 on pins 23 (RX) and 19 (TX).
 The [HardwareSerial example][esp32hw] uses Serial2.
 
-[esp32hw]: examples/HardwareSerial/README.md#mhetesp32minikit
-[esp32sw]: examples/SoftwareSerial/README.md#mhetesp32minikit
+[esp32hw]: examples/HardwareSerial/README.md#esp32-minikit
+[esp32sw]: examples/SoftwareSerial/README.md#esp32-minikit
 
 ## Advanced usage
 
@@ -215,7 +215,7 @@ The available status/error codes and pre-defined error messages are:
 For easy of use, the error message are pre-defined with `#define`.
 See the [examples](examples/) for error handling implementation.
 
-## Contribute back
+## Contribute
 
 If you have read this far, this is the library for your project
 or you can not figure out how to use it. In any case, I can use your help.
