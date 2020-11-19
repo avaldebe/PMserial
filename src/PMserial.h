@@ -52,7 +52,8 @@ enum PMS
 class SerialPM
 {
 public:
-  union {
+  union
+  {
     uint16_t data[9]; // all PM/NC data
     struct
     {
@@ -67,7 +68,8 @@ public:
       uint16_t n0p3, n0p5, n1p0, n2p5, n5p0, n10p0;
     };
   };
-  union {
+  union
+  {
     float extra[3]; // T/RH/HCHO
     struct
     {
@@ -121,7 +123,7 @@ public:
   STATUS read(bool tsi_mode = false, bool truncated_num = false);
   operator bool() { return status == OK; }
   inline bool has_particulate_matter() { return status == OK; }
-  inline bool has_number_concentration() { return (status == OK) && (pms == PLANTOWER_32B); }
+  inline bool has_number_concentration() { return (status == OK) && (pms != PMS3003); }
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
   inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
 #ifdef PMS_DEBUG
