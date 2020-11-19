@@ -30,32 +30,35 @@
 #define HAS_USB_SERIAL
 #endif
 
-enum PMS {
-  PLANTOWER_AUTO,               // self discovery
-  PLANTOWER_24B,                // 24 byte long message, no count info (LBC)
-  PLANTOWER_32B,                // 32 byte long message, w/count info (LBC)
-  PLANTOWER_32B_S,              // 32 byte long message, w/count info and HCHO (LBC)
-  PLANTOWER_32B_T,              // 32 byte long message, w/partial count info, temp and rhum (LBC)
-  PLANTOWER_40B,                // 40 byte long message, w/count info, temp, rhum and HCHO (LBC)
-  PMSx003   = PLANTOWER_AUTO,   // self discovery
-  PMS1003   = PLANTOWER_32B,    // G1
-  PMS3003   = PLANTOWER_24B,    // G3
-  PMS5003   = PLANTOWER_32B,    // G5
-  PMS5003S  = PLANTOWER_32B_S,  // G5S
-  PMS5003T  = PLANTOWER_32B_T,  // G5T
-  PMS5003ST = PLANTOWER_40B,    // G5ST
-  PMS7003   = PLANTOWER_32B,    // G7
-  PMSA003   = PLANTOWER_32B     // G10
+enum PMS
+{
+  PLANTOWER_AUTO,             // self discovery
+  PLANTOWER_24B,              // 24 byte long message, no count info (LBC)
+  PLANTOWER_32B,              // 32 byte long message, w/count info (LBC)
+  PLANTOWER_32B_S,            // 32 byte long message, w/count info and HCHO (LBC)
+  PLANTOWER_32B_T,            // 32 byte long message, w/partial count info, temp and rhum (LBC)
+  PLANTOWER_40B,              // 40 byte long message, w/count info, temp, rhum and HCHO (LBC)
+  PMSx003 = PLANTOWER_AUTO,   // self discovery
+  PMS1003 = PLANTOWER_32B,    // G1
+  PMS3003 = PLANTOWER_24B,    // G3
+  PMS5003 = PLANTOWER_32B,    // G5
+  PMS5003S = PLANTOWER_32B_S, // G5S
+  PMS5003T = PLANTOWER_32B_T, // G5T
+  PMS5003ST = PLANTOWER_40B,  // G5ST
+  PMS7003 = PLANTOWER_32B,    // G7
+  PMSA003 = PLANTOWER_32B     // G10
 };
 
-class SerialPM {
- public:
-  union {
-    uint16_t data[9];  // all PM/NC data
+class SerialPM
+{
+public:
+  union
+  {
+    uint16_t data[9]; // all PM/NC data
     struct
     {
-      uint16_t pm[3];  // particulate matter [ug/m3]
-      uint16_t nc[6];  // number concentration [#/100cc]
+      uint16_t pm[3]; // particulate matter [ug/m3]
+      uint16_t nc[6]; // number concentration [#/100cc]
     };
     struct
     {
@@ -65,8 +68,9 @@ class SerialPM {
       uint16_t n0p3, n0p5, n1p0, n2p5, n5p0, n10p0;
     };
   };
-  union {
-    float extra[3];  // T/RH/HCHO
+  union
+  {
+    float extra[3]; // T/RH/HCHO
     struct
     {
       // temperature [°C], relative humidity [%], formaldehyde concentration [mg/m3]
@@ -74,33 +78,37 @@ class SerialPM {
     };
   };
 #ifdef HAS_HW_SERIAL
-  SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor) {
-    uart     = &serial;
+  SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor)
+  {
+    uart = &serial;
     hwSerial = true;
   }
 #endif
 #ifdef HAS_SW_SERIAL
-  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor) {
+  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor)
+  {
     SoftwareSerial serial(rx, tx);
-    uart     = &serial;
+    uart = &serial;
     hwSerial = false;
   }
 #elif defined(ESP32)
-  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor), rx(rx), tx(tx) {
-    uart     = &Serial1;
+  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor), rx(rx), tx(tx)
+  {
+    uart = &Serial1;
     hwSerial = true;
   }
 #endif
   void init();
-#define PMS_ERROR_TIMEOUT     "Sensor read timeout"
-#define PMS_ERROR_PMS_TYPE    "Wrong PMSx003 sensor type"
+#define PMS_ERROR_TIMEOUT "Sensor read timeout"
+#define PMS_ERROR_PMS_TYPE "Wrong PMSx003 sensor type"
 #define PMS_ERROR_MSG_UNKNOWN "Unknown message protocol"
-#define PMS_ERROR_MSG_HEADER  "Incomplete message header"
-#define PMS_ERROR_MSG_BODY    "Incomplete message body"
-#define PMS_ERROR_MSG_START   "Wrong message start"
-#define PMS_ERROR_MSG_LENGTH  "Message too long"
-#define PMS_ERROR_MSG_CKSUM   "Wrong message checksum"
-  enum STATUS {
+#define PMS_ERROR_MSG_HEADER "Incomplete message header"
+#define PMS_ERROR_MSG_BODY "Incomplete message body"
+#define PMS_ERROR_MSG_START "Wrong message start"
+#define PMS_ERROR_MSG_LENGTH "Message too long"
+#define PMS_ERROR_MSG_CKSUM "Wrong message checksum"
+  enum STATUS
+  {
     OK,
     ERROR_TIMEOUT,
     ERROR_PMS_TYPE,
@@ -122,9 +130,11 @@ class SerialPM {
   inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
 #ifdef PMS_DEBUG
 #ifdef HAS_HW_SERIAL
-  inline void print_buffer(Stream &term, const char *fmt) {
+  inline void print_buffer(Stream &term, const char *fmt)
+  {
     char tmp[8];
-    for (uint8_t n = 0; n < BUFFER_LEN; n += 2) {
+    for (uint8_t n = 0; n < BUFFER_LEN; n += 2)
+    {
       sprintf(tmp, fmt, buff2word(n));
       term.print(tmp);
     }
@@ -136,12 +146,12 @@ class SerialPM {
   inline uint16_t bytes_read() { return nbytes; }
 #endif
 
- protected:
-  Stream *uart;   // hardware/software serial
-  PMS pms;        // sensor type/message protocol
-  bool hwSerial;  // Is uart hardware serial? (or software serial)
+protected:
+  Stream *uart;  // hardware/software serial
+  PMS pms;       // sensor type/message protocol
+  bool hwSerial; // Is uart hardware serial? (or software serial)
 #ifdef ESP32
-  uint8_t rx, tx;  // Serial1 pins on ESP32
+  uint8_t rx, tx; // Serial1 pins on ESP32
 #endif
 
   // utility functions
@@ -151,7 +161,7 @@ class SerialPM {
 
   // message timing
   static const uint16_t max_wait_ms = 1000;
-  uint16_t wait_ms;  // time spent waiting for new sample
+  uint16_t wait_ms; // time spent waiting for new sample
 
   // message buffer
   static const uint8_t BUFFER_LEN = 40;
@@ -159,4 +169,4 @@ class SerialPM {
   inline uint16_t buff2word(uint8_t n) { return (buffer[n] << 8) | buffer[n + 1]; }
 };
 
-#endif  //_SERIALPM_H
+#endif //_SERIALPM_H
