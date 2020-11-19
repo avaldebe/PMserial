@@ -122,6 +122,8 @@ public:
   STATUS status;
   STATUS read(bool tsi_mode = false, bool truncated_num = false);
   operator bool() { return status == OK; }
+  void sleep();
+  void wake();
   inline bool has_particulate_matter() { return status == OK; }
   inline bool has_number_concentration() { return (status == OK) && (pms != PMS3003); }
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
