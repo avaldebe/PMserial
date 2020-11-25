@@ -129,12 +129,12 @@ public:
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
   inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
     
-    // adding offsets works well in normal range
-    // might introduce under- or overflow at the ends of the sensor range
-    void  set_rhum_offset(float offset) { rhum_offset = offset; };
-    void  set_temp_offset(float offset) { temp_offset = offset; };
-    float get_rhum_offset() { return rhum_offset; };
-    float get_temp_offset() { return temp_offset; };
+  // adding offsets works well in normal range
+  // might introduce under- or overflow at the ends of the sensor range
+  void  set_rhum_offset(float offset) { rhum_offset = offset; };
+  void  set_temp_offset(float offset) { temp_offset = offset; };
+  float get_rhum_offset() { return rhum_offset; };
+  float get_temp_offset() { return temp_offset; };
 #ifdef PMS_DEBUG
 #ifdef HAS_HW_SERIAL
   inline void print_buffer(Stream &term, const char *fmt)
