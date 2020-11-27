@@ -243,9 +243,10 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 ## Changelog
 
-- Work in progress
+- 1.1.0
   - Support `atmelsam` devices [#8][GH8]/[PR12][]
-  - Support the PMS5003 S/ST/T sensors [#10][GH10]
+  - Support the PMS5003 S/ST/T sensors [#10][GH10],[#16][GH16]/[PR17][]
+  - Support `sleep`/`wake` commands [#14][GH14]/[PR15][]
   - Use Serial1 as "SoftwareSerial" for ESP32, [#7][GH7]/[PR9][]
 - 1.0.1
   - Fix broken SoftwareSerial for ESP8266, [#6][GH6]
@@ -259,3 +260,7 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 [PR9]:  https://github.com/avaldebe/PMserial/pull/9
 [GH10]: https://github.com/avaldebe/PMserial/issues/10
 [PR12]: https://github.com/avaldebe/PMserial/pull/12
+[GH14]: https://github.com/avaldebe/PMserial/issues/14
+[PR15]: https://github.com/avaldebe/PMserial/pull/15
+[GH16]: https://github.com/avaldebe/PMserial/issues/16
+[PR17]: https://github.com/avaldebe/PMserial/pull/17
