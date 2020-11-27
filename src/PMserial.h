@@ -128,6 +128,13 @@ public:
   inline bool has_number_concentration() { return (status == OK) && (pms != PMS3003); }
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
   inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
+    
+  // adding offsets works well in normal range
+  // might introduce under- or overflow at the ends of the sensor range
+  inline void  set_rhum_offset(float offset) { rhum_offset = offset; };
+  inline void  set_temp_offset(float offset) { temp_offset = offset; };
+  inline float get_rhum_offset() { return rhum_offset; };
+  inline float get_temp_offset() { return temp_offset; };
 #ifdef PMS_DEBUG
 #ifdef HAS_HW_SERIAL
   inline void print_buffer(Stream &term, const char *fmt)
@@ -153,6 +160,10 @@ protected:
 #ifdef ESP32
   uint8_t rx, tx; // Serial1 pins on ESP32
 #endif
+
+  // Correct Temperature & Humidity
+  float temp_offset = 0.0;
+  float rhum_offset = 0.0;
 
   // utility functions
   STATUS trigRead();

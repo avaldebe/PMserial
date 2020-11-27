@@ -221,15 +221,15 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num)
     hcho = buff2word(28) * 1e-3;
     break;
   case PMS5003T:
-    temp = int8_t(n5p0) * 1e-1; // cast to signed integer
-    rhum = n10p0 * 1e-1;
+    temp = int16_t(n5p0) * 1e-1 + temp_offset; // cast to signed integer 16bits
+    rhum = n10p0 * 1e-1 + rhum_offset;
     n5p0 = 0;
     n10p0 = 0;
     break;
   case PMS5003ST:
     hcho = buff2word(28) * 1e-3;
-    temp = int8_t(buff2word(30)) * 1e-1; // cast to signed integer
-    rhum = buff2word(32) * 1e-1;
+    temp = int16_t(buff2word(30)) * 1e-1 + temp_offset; // cast to signed integer 16bits
+    rhum = buff2word(32) * 1e-1 + rhum_offset;
     break;
   default:
     break;
