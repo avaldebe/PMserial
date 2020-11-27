@@ -215,6 +215,18 @@ The available status/error codes and pre-defined error messages are:
 For easy of use, the error message are pre-defined with `#define`.
 See the [examples](examples/) for error handling implementation.
 
+## Temperature and humidity offset correction (Optional)
+
+Some sensors have a small deviation with temperature and humidity readings.
+The compensate is possible with a correction offset defined by set_temp_offset() and set_rhum_offset().
+The result will be reading + offset. Default offset values are O.
+
+Example:
+```c++
+set_temp_offset(-0.6);
+set_rhum_offset(2);
+```
+
 ## Contribute
 
 If you have read this far, this is the library for your project

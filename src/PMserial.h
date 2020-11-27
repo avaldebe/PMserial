@@ -131,10 +131,10 @@ public:
     
   // adding offsets works well in normal range
   // might introduce under- or overflow at the ends of the sensor range
-  void  set_rhum_offset(float offset) { rhum_offset = offset; };
-  void  set_temp_offset(float offset) { temp_offset = offset; };
-  float get_rhum_offset() { return rhum_offset; };
-  float get_temp_offset() { return temp_offset; };
+  inline void  set_rhum_offset(float offset) { rhum_offset = offset; };
+  inline void  set_temp_offset(float offset) { temp_offset = offset; };
+  inline float get_rhum_offset() { return rhum_offset; };
+  inline float get_temp_offset() { return temp_offset; };
 #ifdef PMS_DEBUG
 #ifdef HAS_HW_SERIAL
   inline void print_buffer(Stream &term, const char *fmt)
