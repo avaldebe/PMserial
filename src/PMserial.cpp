@@ -107,6 +107,9 @@ void SerialPM::wake() {
 
 SerialPM::STATUS SerialPM::trigRead()
 {
+  if (hwSerial == false)
+    static_cast<SoftwareSerial *>(uart)->listen(); // when you want to listen on a port, explicitly select it. (https://www.arduino.cc/en/Tutorial/LibraryExamples/TwoPortReceive)
+
   while (uart->available())
   {
     uart->read(); // empty the RX buffer

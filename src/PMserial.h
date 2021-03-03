@@ -77,6 +77,7 @@ public:
       float temp, rhum, hcho;
     };
   };
+
 #ifdef HAS_HW_SERIAL
   SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor)
   {
@@ -84,10 +85,10 @@ public:
     hwSerial = true;
   }
 #endif
+
 #ifdef HAS_SW_SERIAL
-  SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor)
+  SerialPM(PMS sensor, Stream &serial) : pms(sensor)
   {
-    SoftwareSerial serial(rx, tx);
     uart = &serial;
     hwSerial = false;
   }
@@ -98,6 +99,7 @@ public:
     hwSerial = true;
   }
 #endif
+
   void init();
 #define PMS_ERROR_TIMEOUT "Sensor read timeout"
 #define PMS_ERROR_PMS_TYPE "Wrong PMSx003 sensor type"
