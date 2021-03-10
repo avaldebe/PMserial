@@ -11,8 +11,11 @@ constexpr auto PMS_TX = 11;
 #endif
 
 #ifndef ESP32
-SoftwareSerial SoftSerial1(PMS_RX, PMS_TX);
-SerialPM pms(PMS5003, SoftSerial1); // PMSx003, RX, TX
+SerialPM pms(PMS5003, PMS_RX, PMS_TX); // PMSx003, RX, TX
+
+// Alternative:
+//SoftwareSerial SoftSerial1(PMS_RX, PMS_TX);
+//SerialPM pms(PMS5003, SoftSerial1);
 #else
 SerialPM pms(PMS5003, PMS_RX, PMS_TX); // PMSx003, RX, TX
 #endif
