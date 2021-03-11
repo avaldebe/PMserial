@@ -4,10 +4,21 @@
 #include <SoftwareSerial.h>
 #endif
 #include <PMserial.h> // Arduino library for PM sensors with serial interface
+
 #if !defined(PMS_RX) && !defined(PMS_TX)
-const uint8_t PMS_RX = 10, PMS_TX = 11;
+constexpr auto PMS_RX = 10;
+constexpr auto PMS_TX = 11;
 #endif
+
+#ifndef ESP32
 SerialPM pms(PMS5003, PMS_RX, PMS_TX); // PMSx003, RX, TX
+
+// Alternative:
+//SoftwareSerial SoftSerial1(PMS_RX, PMS_TX);
+//SerialPM pms(PMS5003, SoftSerial1);
+#else
+SerialPM pms(PMS5003, PMS_RX, PMS_TX); // PMSx003, RX, TX
+#endif
 
 void setup()
 {
@@ -19,6 +30,7 @@ void setup()
   Serial.println(PMS_RX);
   Serial.print(F("  TX:"));
   Serial.println(PMS_TX);
+
   pms.init();
 }
 

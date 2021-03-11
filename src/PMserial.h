@@ -77,28 +77,46 @@ public:
       float temp, rhum, hcho;
     };
   };
+
+  // manual mode - you need configure SerialPort manual and link to this object (function "setSerialPort")
+  SerialPM(PMS sensor) : pms(sensor)
+  {
+    uart = nullptr;
+    hwSerial = serModeManual;
+  }
+
 #ifdef HAS_HW_SERIAL
   SerialPM(PMS sensor, HardwareSerial &serial) : pms(sensor)
   {
     uart = &serial;
-    hwSerial = true;
+    hwSerial = serModeHardware;
   }
 #endif
+
 #ifdef HAS_SW_SERIAL
   SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor)
   {
-    SoftwareSerial serial(rx, tx);
+    static SoftwareSerial serial(rx, tx);
     uart = &serial;
-    hwSerial = false;
+    hwSerial = serModeSoftware;
+  }
+
+  SerialPM(PMS sensor, Stream &serial) : pms(sensor)
+  {
+    uart = &serial;
+    //TODO: WIP!!!
+    hwSerial = serModeManual;
   }
 #elif defined(ESP32)
   SerialPM(PMS sensor, uint8_t rx, uint8_t tx) : pms(sensor), rx(rx), tx(tx)
   {
     uart = &Serial1;
-    hwSerial = true;
+    hwSerial = serModeHardware;
   }
 #endif
+
   void init();
+
 #define PMS_ERROR_TIMEOUT "Sensor read timeout"
 #define PMS_ERROR_PMS_TYPE "Wrong PMSx003 sensor type"
 #define PMS_ERROR_MSG_UNKNOWN "Unknown message protocol"
@@ -107,6 +125,7 @@ public:
 #define PMS_ERROR_MSG_START "Wrong message start"
 #define PMS_ERROR_MSG_LENGTH "Message too long"
 #define PMS_ERROR_MSG_CKSUM "Wrong message checksum"
+
   enum STATUS
   {
     OK,
@@ -119,6 +138,7 @@ public:
     ERROR_MSG_LENGTH,
     ERROR_MSG_CKSUM
   };
+
   STATUS status;
   STATUS read(bool tsi_mode = false, bool truncated_num = false);
   operator bool() { return status == OK; }
@@ -128,6 +148,8 @@ public:
   inline bool has_number_concentration() { return (status == OK) && (pms != PMS3003); }
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
   inline bool has_formaldehyde() { return (status == OK) && ((pms == PMS5003S) || (pms == PMS5003ST)); }
+  inline Stream * getSerialPort() { return uart; }
+  inline void setSerialPort(Stream * serial) { uart = serial; hwSerial = serModeManual; }
     
   // adding offsets works well in normal range
   // might introduce under- or overflow at the ends of the sensor range
@@ -156,7 +178,7 @@ public:
 protected:
   Stream *uart;  // hardware/software serial
   PMS pms;       // sensor type/message protocol
-  bool hwSerial; // Is uart hardware serial? (or software serial)
+  enum {serModeHardware, serModeSoftware, serModeManual} hwSerial; // Is uart hardware serial? (or software serial)
 #ifdef ESP32
   uint8_t rx, tx; // Serial1 pins on ESP32
 #endif

@@ -66,25 +66,22 @@ const uint8_t
 void SerialPM::init()
 {
 #ifdef ESP32
-  if (hwSerial && rx && tx)
-  {
+  if ((hwSerial == serModeHardware) && rx && tx)
     static_cast<HardwareSerial *>(uart)->begin(9600, SERIAL_8N1, rx, tx);
-  }
-  else if (hwSerial)
 #else
-  if (hwSerial)
-#endif
-  {
+
 #ifdef HAS_HW_SERIAL
+  if (hwSerial == serModeHardware)
     static_cast<HardwareSerial *>(uart)->begin(9600, SERIAL_8N1);
 #endif
-  }
-  else
-  {
+
+#endif // ESP32
+
 #ifdef HAS_SW_SERIAL
+  if (hwSerial == serModeSoftware)
     static_cast<SoftwareSerial *>(uart)->begin(9600);
 #endif
-  }
+
   uart->write(cfg, msgLen); // set passive mode
   uart->flush();
   delay(max_wait_ms * 2);
@@ -107,6 +104,11 @@ void SerialPM::wake() {
 
 SerialPM::STATUS SerialPM::trigRead()
 {
+  #ifdef HAS_SW_SERIAL
+  if (hwSerial == serModeSoftware)
+    static_cast<SoftwareSerial *>(uart)->listen(); // when you want to listen on a port, explicitly select it. (https://www.arduino.cc/en/Tutorial/LibraryExamples/TwoPortReceive)
+  #endif
+
   while (uart->available())
   {
     uart->read(); // empty the RX buffer
