@@ -243,6 +243,9 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 ## Changelog
 
+- 1.1.1
+  - Fix SoftwareSerial dangling pointer [#19][GH19]/[PR20][]
+  - ESP8266 no longer requires EspSoftwareSerial
 - 1.1.0
   - Support `atmelsam` devices [#8][GH8]/[PR12][]
   - Support the PMS5003 S/ST/T sensors [#10][GH10],[#16][GH16]/[PR17][]
@@ -264,3 +267,5 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 [PR15]: https://github.com/avaldebe/PMserial/pull/15
 [GH16]: https://github.com/avaldebe/PMserial/issues/16
 [PR17]: https://github.com/avaldebe/PMserial/pull/17
+[GH19]: https://github.com/avaldebe/PMserial/issues/19
+[PR20]: https://github.com/avaldebe/PMserial/pull/20
