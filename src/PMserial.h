@@ -16,9 +16,13 @@
 #include <HardwareSerial.h>
 #endif
 
+
+
 #if defined(__AVR__) || defined(ESP8266)
+#if defined(SW_REQUIRED)
 #define HAS_SW_SERIAL
 #include <SoftwareSerial.h>
+#endif
 #endif
 
 #if defined(HAS_HWSERIAL1) || defined(BOARD_HAVE_USART1)
