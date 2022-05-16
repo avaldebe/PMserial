@@ -16,7 +16,7 @@
 #include <HardwareSerial.h>
 #endif
 
-#if defined(__AVR__) || defined(ESP8266)
+#if (defined(__AVR__) || defined(ESP8266)) && !defined(NO_SW_SERIAL_REQUIRED)
 #define HAS_SW_SERIAL
 #include <SoftwareSerial.h>
 #endif

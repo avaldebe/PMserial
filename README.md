@@ -228,6 +228,17 @@ set_temp_offset(-0.6);
 set_rhum_offset(2);
 ```
 
+## SoftwareSerial Compatibility
+
+Some libraries (e.g [Arduino-SDI-12](https://github.com/EnviroDIY/Arduino-SDI-12)) conflict with SoftwareSerial library, which is loaded by default for
+some boards. In order to disable SoftwareSerial compatibility, define `NO_SW_SERIAL_REQUIRED` before
+including the library. For example:
+
+```c++
+#define NO_SW_SERIAL_REQUIRED
+#include <PMSerial.h>
+```
+
 ## Contribute
 
 If you have read this far, this is the library for your project
