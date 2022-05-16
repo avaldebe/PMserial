@@ -255,6 +255,10 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 
 ## Changelog
 
+- 1.2.0
+  - Avoid loading `SoftwareSerial` library with `-D NO_SW_SERIAL_REQUIRED` compilation flag  [PR24][]
+  - Update OLED library used on examples
+  - Enable STM32F103C8 Serial1
 - 1.1.1
   - Fix SoftwareSerial dangling pointer [#19][GH19]/[PR20][]
   - ESP8266 no longer requires EspSoftwareSerial
@@ -281,3 +285,4 @@ See issue [#4][GH4] for inspiration. PRs are welcomed.
 [PR17]: https://github.com/avaldebe/PMserial/pull/17
 [GH19]: https://github.com/avaldebe/PMserial/issues/19
 [PR20]: https://github.com/avaldebe/PMserial/pull/20
+[PR24]: https://github.com/avaldebe/PMserial/pull/24
