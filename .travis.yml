@@ -17,4 +17,4 @@ install:
   - pio update
 
 script:
-  - pio ci -l ./ -c $PLATFORMIO_CI_SRC/platformio.ini
+  - pio ci -l ./ -c $PLATFORMIO_CI_SRC/platformio.ini $PLATFORMIO_CI_SRC
