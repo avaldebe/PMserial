@@ -2,9 +2,10 @@
 
 Arduino library for PM sensors with serial interface
 
-[![Build Status](https://travis-ci.com/avaldebe/PMserial.svg?branch=master)](https://travis-ci.com/avaldebe/PMserial)
+[![PlatformIO CI](https://github.com/avaldebe/PMserial/actions/workflows/CI.yml/badge.svg)](https://github.com/avaldebe/PMserial/actions/workflows/CI.yml)
 [![GitHub issues](https://img.shields.io/github/issues/avaldebe/PMserial)](https://github.com/avaldebe/PMSerial/issues)
 [![GitHub license](https://img.shields.io/github/license/avaldebe/PMserial)](https://github.com/avaldebe/PMserial/blob/master/LICENSE)
+
 
 ## Sensors
 
