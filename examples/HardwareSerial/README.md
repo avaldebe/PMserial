@@ -75,7 +75,7 @@ framework = arduino
 platform = ststm32
 board = genericSTM32F103C8
 upload_protocol = stlink
-build_flags = -D USE_HWSERIAL1
+build_flags = -D ENABLE_HWSERIAL1 -D USE_HWSERIAL1
 ```
 
 ```bash
