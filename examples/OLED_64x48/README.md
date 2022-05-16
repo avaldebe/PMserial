@@ -3,16 +3,17 @@
 Read PMS5003 sensor and display results on a 0.66 inch OLED.
 
 ## OLED display
+
 In particular this example uses the [WEMOS OLED shield][oled_shield],
 and the [esp8266-oled-ssd1306][OLEDlib] library.
 
 ```bash
 # install the libraries (one time setup)
-platformio lib install ESP8266_SSD1306
+platformio lib install "thingpulse/ESP8266 and ESP32 OLED driver for SSD1306 displays"
 ```
 
 [oled_shield]: https://wiki.wemos.cc/products:d1_mini_shields:oled_shield
-[OLEDlib]: https://github.com/squix78/esp8266-oled-ssd1306
+[OLEDlib]: https://github.com/ThingPulse/esp8266-oled-ssd1306
 
 ## ESP8266 `d1_mini`
 
