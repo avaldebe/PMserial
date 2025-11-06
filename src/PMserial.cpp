@@ -169,7 +169,7 @@ SerialPM::STATUS SerialPM::trigRead()
 
     case PLANTOWER_32B_S:
     case PLANTOWER_32B_T:
-      if (sensor !== PLANTOWER_32B) 
+      if (sensor != PLANTOWER_32B) 
         return ERROR_PMS_TYPE;
       break;
   }
