@@ -26,10 +26,14 @@ jobs:
     - name: Cache PlatformIO
       uses: actions/cache@v4
       with:
-        path: ~/.platformio
+        path: |
+          ~/.platformio
+          ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
     - name: Set up Python
       uses: actions/setup-python@v6
+      with:
+        python-version: '3.11'
     - name: Install PlatformIO
       run: |
         python -m pip install --upgrade pip
