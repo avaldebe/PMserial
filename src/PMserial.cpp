@@ -156,12 +156,23 @@ SerialPM::STATUS SerialPM::trigRead()
   default:
     return ERROR_MSG_UNKNOWN;
   }
-  // self discovery
-  if (pms == PLANTOWER_AUTO)
-    pms = sensor;
-  // check sensor type
-  if (pms != sensor)
-    return ERROR_PMS_TYPE;
+
+  switch (pms) {
+    case PLANTOWER_AUTO: 
+      pms = sensor;
+
+    case PLANTOWER_24B:
+    case PLANTOWER_32B:
+    case PLANTOWER_40B:
+      if (pms != sensor)
+        return ERROR_PMS_TYPE;
+
+    case PLANTOWER_32B_S:
+    case PLANTOWER_32B_T:
+      if (sensor != PLANTOWER_32B) 
+        return ERROR_PMS_TYPE;
+      break;
+  }
 
   // full message should fit in the buffer
   if (messageLen > BUFFER_LEN)
