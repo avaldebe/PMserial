@@ -90,6 +90,9 @@ public:
   {
     uart = &serial;
     hwSerial = serModeHardware;
+#ifdef ESP32
+    rx = tx = 0; // caller configures the UART pins; keeps init() from re-begin with garbage pins
+#endif
   }
 #endif
 
@@ -141,9 +144,13 @@ public:
 
   STATUS status;
   STATUS read(bool tsi_mode = false, bool truncated_num = false);
+  // active (continuous) mode: parse the next streamed frame without flushing RX or
+  // sending a passive-mode trigger
+  STATUS readActive(bool tsi_mode = false, bool truncated_num = false);
   operator bool() { return status == OK; }
   void sleep();
   void wake();
+  void setActiveMode(); // continuous ~1 Hz output (PMSx003 power-on default)
   inline bool has_particulate_matter() { return status == OK; }
   inline bool has_number_concentration() { return (status == OK) && (pms != PMS3003); }
   inline bool has_temperature_humidity() { return (status == OK) && ((pms == PMS5003T) || (pms == PMS5003ST)); }
@@ -189,6 +196,8 @@ protected:
 
   // utility functions
   STATUS trigRead();
+  STATUS trigReadStream();
+  STATUS readBody(size_t headLen, uint32_t start_ms);
   bool checkBuffer(size_t bufferLen);
   void decodeBuffer(bool tsi_mode, bool truncated_num);
 

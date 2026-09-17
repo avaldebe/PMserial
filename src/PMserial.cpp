@@ -57,7 +57,7 @@ const uint8_t
 
 const uint8_t
     msgLen = 7,
-    //act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
+    act[msgLen] = {0x42,0x4D,0xE1,0x00,0x01,0x01,0x71}, // set active mode
     slp[msgLen] = {0x42,0x4D,0xE4,0x00,0x00,0x01,0x73}, // sleep
     wak[msgLen] = {0x42,0x4D,0xE4,0x00,0x01,0x01,0x74}, // wake
     cfg[msgLen] = {0x42, 0x4D, 0xE1, 0x00, 0x00, 0x01, 0x70}, // set passive mode
@@ -101,6 +101,10 @@ void SerialPM::wake() {
   uart->flush();
   delay(max_wait_ms * 2);
 }
+void SerialPM::setActiveMode() {
+  uart->write(act, msgLen);  // active (continuous) mode: sensor streams ~1 Hz unprompted
+  uart->flush();
+}
 
 SerialPM::STATUS SerialPM::trigRead()
 {
@@ -138,6 +142,13 @@ SerialPM::STATUS SerialPM::trigRead()
   if (buff2word(0) != 0x424D)
     return ERROR_MSG_START;
 
+  return readBody(headLen, start_ms);
+}
+
+// shared message tail for trigRead()/trigReadStream(): buffer[0..headLen) already holds a
+// valid 'BM' header. start_ms anchors the overall max_wait_ms budget.
+SerialPM::STATUS SerialPM::readBody(size_t headLen, uint32_t start_ms)
+{
   // check message length against stated sensor type
   size_t bodyLen = buff2word(2);         // message body length
   size_t messageLen = headLen + bodyLen; // full message length
@@ -200,6 +211,40 @@ SerialPM::STATUS SerialPM::trigRead()
   return OK;
 }
 
+SerialPM::STATUS SerialPM::trigReadStream()
+{
+  const size_t headLen = 4;     // message header length
+  uint32_t start_ms = millis(); // start waiting time
+  wait_ms = 0;
+
+  // Scan for the 0x424D ('BM') frame marker. In active mode frames stream continuously
+  // (~1 Hz), so the caller can wake mid-frame; bytes are shifted through buffer[0..1]
+  // instead of flushing RX.
+  buffer[0] = buffer[1] = 0;
+  do
+  {
+    while (uart->available())
+    {
+      buffer[0] = buffer[1];
+      buffer[1] = (uint8_t)uart->read();
+      if (buff2word(0) == 0x424D)
+      {
+        // read the remaining header bytes (frame body length)
+        while (size_t(uart->available()) < headLen - 2 && millis() - start_ms < max_wait_ms)
+          delay(1);
+        if (uart->readBytes(&buffer[2], headLen - 2) != headLen - 2)
+          return ERROR_MSG_HEADER;
+        nbytes = headLen;
+        return readBody(headLen, start_ms);
+      }
+    }
+    delay(10);                     // wait up to max_wait_ms
+    wait_ms = millis() - start_ms; // time waited so far
+  } while (wait_ms < max_wait_ms);
+
+  return ERROR_TIMEOUT;
+}
+
 bool SerialPM::checkBuffer(size_t bufferLen)
 {
   uint16_t cksum = buff2word(bufferLen - 2);
@@ -259,6 +304,13 @@ void SerialPM::decodeBuffer(bool tsi_mode, bool truncated_num)
 SerialPM::STATUS SerialPM::read(bool tsi_mode, bool truncated_num)
 {
   status = trigRead();                   // read comand on passive mode
+  decodeBuffer(tsi_mode, truncated_num); // decode message only if buffer checks out
+  return status;
+}
+
+SerialPM::STATUS SerialPM::readActive(bool tsi_mode, bool truncated_num)
+{
+  status = trigReadStream();             // next streamed frame on active (continuous) mode
   decodeBuffer(tsi_mode, truncated_num); // decode message only if buffer checks out
   return status;
 }
